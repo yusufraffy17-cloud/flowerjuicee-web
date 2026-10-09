@@ -352,7 +352,7 @@ const htmlContent = `<!DOCTYPE html>
       </div>
 
       <div class="cover-hero-wrapper">
-        <img class="cover-hero-img" src="seven_celestial_blooms_refined_masterpiece.jpg" alt="The 7 Celestial Blooms Masterpiece">
+        <img class="cover-hero-img" src="seven_celestial_blooms_real_master.jpg" alt="The 7 Celestial Blooms Masterpiece">
       </div>
 
       <div class="cover-tagline">
@@ -380,7 +380,7 @@ const htmlContent = `<!DOCTYPE html>
 
     <!-- Masterpiece Preview Banner -->
     <div style="text-align: center; margin-bottom: 12px;">
-      <img src="seven_celestial_blooms_refined_masterpiece.jpg" style="width: 100%; height: 230px; object-fit: cover; border-radius: 8px; border: 1.5px solid #d4af37; box-shadow: 0 4px 12px rgba(0,0,0,0.08);" alt="Masterpiece 7 Gelang">
+      <img src="seven_celestial_blooms_real_master.jpg" style="width: 100%; height: 230px; object-fit: cover; border-radius: 8px; border: 1.5px solid #d4af37; box-shadow: 0 4px 12px rgba(0,0,0,0.08);" alt="Masterpiece 7 Gelang">
       <div style="font-size: 7.5pt; color: #6e6480; margin-top: 4px; font-style: italic;">
         Formasi Lingkaran Harmoni Kosmik: Setiap gelang menempati orbit surgawinya di atas beludru ungu malam kerajaan.
       </div>

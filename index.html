@@ -560,14 +560,150 @@
       overflow: hidden;
       border: 1.5px solid rgba(212, 175, 55, 0.4);
       box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      background: #000;
+      background: #0d0917;
+      user-select: none;
+      touch-action: pan-y;
     }
+
+    /* Slider Track & Slides */
+    .stage-slider-track {
+      display: flex;
+      width: 200%;
+      height: 480px;
+      transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: transform;
+    }
+
+    .stage-slide {
+      width: 50%;
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
     .stage-visual-img {
       width: 100%;
-      height: 480px;
+      height: 100%;
       object-fit: cover;
       display: block;
-      transition: opacity 0.4s ease, transform 0.5s ease;
+      transition: transform 0.5s ease;
+    }
+
+    /* Badge Label Slide: 📷 1 / 2 • Sample Tangan */
+    .stage-slide-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: rgba(18, 12, 30, 0.78);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: #F7EED3;
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 5;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    /* Slide Navigation Arrows */
+    .stage-slide-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(18, 12, 30, 0.68);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: #F7EED3;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+      z-index: 6;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .stage-slide-arrow:hover {
+      background: rgba(212, 175, 55, 0.9);
+      color: #1A1329;
+      border-color: #D4AF37;
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+    }
+    .stage-slide-arrow:active {
+      transform: translateY(-50%) scale(0.96);
+    }
+    .stage-slide-arrow:focus-visible {
+      outline: 2px solid #D4AF37;
+      outline-offset: 2px;
+    }
+    .stage-slide-arrow.prev {
+      left: 12px;
+    }
+    .stage-slide-arrow.next {
+      right: 12px;
+    }
+
+    /* Slide Indicator Pills / Dots */
+    .stage-slide-indicators {
+      position: absolute;
+      bottom: 14px;
+      left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(18, 12, 30, 0.78);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 4px 6px;
+      border-radius: var(--radius-full);
+      backdrop-filter: blur(8px);
+      z-index: 5;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .slide-dot-btn {
+      background: transparent;
+      border: none;
+      color: rgba(247, 238, 211, 0.65);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+    }
+    .slide-dot-btn:hover {
+      color: #F7EED3;
+    }
+    .slide-dot-btn.active {
+      background: rgba(212, 175, 55, 0.35);
+      color: #F7EED3;
+      border: 1px solid rgba(212, 175, 55, 0.6);
+      font-weight: 700;
+    }
+    .slide-dot-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(247, 238, 211, 0.4);
+      transition: all 0.25s ease;
+    }
+    .slide-dot-btn.active .slide-dot-dot {
+      background: #D4AF37;
+      box-shadow: 0 0 8px #D4AF37;
     }
 
     .stage-view-toggle {
@@ -587,6 +723,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      z-index: 5;
     }
     .stage-view-toggle:hover {
       background: var(--caramel-light);
@@ -693,245 +830,7 @@
       margin-top: 6px;
     }
 
-    /* Stage Mode Switcher (Cosmic vs Anime) */
-    .stage-mode-switcher {
-      position: absolute;
-      top: 14px;
-      left: 14px;
-      display: flex;
-      gap: 6px;
-      background: rgba(18, 12, 30, 0.88);
-      border: 1px solid rgba(212, 175, 55, 0.4);
-      padding: 4px;
-      border-radius: var(--radius-full);
-      backdrop-filter: blur(8px);
-      z-index: 10;
-    }
-    .stage-mode-btn {
-      background: transparent;
-      border: none;
-      color: #D6CAE8;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .stage-mode-btn:hover {
-      color: #FFF;
-      background: rgba(255, 255, 255, 0.08);
-    }
-    .stage-mode-btn.active {
-      background: var(--caramel-light);
-      color: #1A1329;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.35);
-    }
 
-    /* ==================== 7 ANIME PERSONAS SHOWCASE ==================== */
-    .anime-personas-section {
-      padding: 80px 0;
-      background: linear-gradient(180deg, var(--bg-cream) 0%, #F5EDE3 50%, var(--bg-cream) 100%);
-      border-bottom: 1.5px solid var(--border-lace);
-      position: relative;
-    }
-    .anime-header {
-      text-align: center;
-      margin-bottom: 44px;
-    }
-    .anime-title {
-      font-size: 2.2rem;
-      color: var(--choc-dark);
-      margin-bottom: 10px;
-    }
-    .anime-sub {
-      color: var(--choc-muted);
-      font-size: 1.05rem;
-      max-width: 720px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    .anime-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 28px;
-    }
-
-    .anime-card {
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-lace);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: var(--shadow-card);
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-    .anime-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-hover);
-      border-color: var(--caramel-gold);
-    }
-
-    .anime-card-media {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 4/5;
-      overflow: hidden;
-      background: #EFE6D9;
-    }
-    .anime-card-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .anime-card:hover .anime-card-img {
-      transform: scale(1.05);
-    }
-
-    .anime-badge-num {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(25, 20, 40, 0.9);
-      color: #F7EED3;
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(212, 175, 55, 0.5);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      letter-spacing: 0.5px;
-    }
-
-    .anime-gem-pill {
-      position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(255, 253, 249, 0.95);
-      color: var(--choc-dark);
-      backdrop-filter: blur(6px);
-      border: 1px solid var(--border-lace);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: var(--radius-full);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .anime-card-body {
-      padding: 22px 20px 20px 20px;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      justify-content: space-between;
-    }
-
-    .anime-persona-title {
-      font-size: 1.35rem;
-      color: var(--choc-dark);
-      font-family: var(--font-display);
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .anime-bracelet-name {
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--choc-main);
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .anime-traits-tagwrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-    .anime-trait-tag {
-      font-size: 0.72rem;
-      background: #F4ECE0;
-      color: var(--choc-dark);
-      padding: 3px 9px;
-      border-radius: 6px;
-      font-weight: 600;
-      border: 1px solid rgba(92, 58, 33, 0.1);
-    }
-
-    .anime-quote-box {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 0.88rem;
-      color: var(--choc-main);
-      background: #FAF6F0;
-      border-left: 3px solid var(--choc-medium);
-      padding: 10px 14px;
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 18px;
-      line-height: 1.5;
-    }
-
-    .anime-card-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .btn-anime-stage {
-      background: var(--bg-card);
-      border: 1.5px solid var(--choc-medium);
-      color: var(--choc-dark);
-      padding: 8px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.78rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-    .btn-anime-stage:hover {
-      background: var(--choc-main);
-      color: #FFF;
-      border-color: var(--choc-main);
-    }
-    .btn-anime-order {
-      background: #25D366;
-      border: 1.5px solid #25D366;
-      color: #FFF;
-      padding: 8px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-decoration: none;
-      text-align: center;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-    .btn-anime-order:hover {
-      background: #1EBE5B;
-      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
-    }
 
     /* ==================== E-COMMERCE PRODUCT CATALOG ==================== */
     .catalog-section {
@@ -1549,6 +1448,7 @@
       .celestial-title {
         font-size: 2rem;
       }
+      .stage-slider-track,
       .stage-visual-img {
         height: 340px;
       }
@@ -1565,6 +1465,594 @@
         max-width: 100%;
       }
     }
+
+    @media (max-width: 480px) {
+      .stage-slider-track,
+      .stage-visual-img {
+        height: 290px;
+      }
+      .stage-slide-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 0.95rem;
+      }
+      .stage-slide-arrow.prev { left: 8px; }
+      .stage-slide-arrow.next { right: 8px; }
+      .stage-slide-badge {
+        font-size: 0.68rem;
+        padding: 4px 8px;
+        top: 10px;
+        left: 10px;
+      }
+      .stage-slide-indicators {
+        bottom: 10px;
+        left: 8px;
+        padding: 3px 5px;
+      }
+      .slide-dot-btn {
+        font-size: 0.68rem;
+        padding: 3px 7px;
+      }
+      .stage-view-toggle {
+        bottom: 10px;
+        right: 8px;
+        padding: 5px 10px;
+        font-size: 0.68rem;
+      }
+    }
+
+    /* ==================== HIDDEN ADMIN PANEL SYSTEM ==================== */
+    /* 1. Secret PIN Backdrop & Modal */
+    .admin-pin-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 20, 15, 0.65);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      padding: 20px;
+    }
+    .admin-pin-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .admin-pin-modal {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-lace);
+      border-radius: 24px;
+      padding: 36px 32px 30px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 25px 60px rgba(68, 41, 23, 0.25);
+      position: relative;
+      text-align: center;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+    }
+    .admin-pin-backdrop.active .admin-pin-modal {
+      transform: scale(1) translateY(0);
+    }
+    .admin-pin-modal.shake {
+      animation: pinShake 0.45s ease-in-out;
+    }
+    @keyframes pinShake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    .pin-close-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--bg-biscuit);
+      border: 1px solid var(--border-lace);
+      color: var(--choc-main);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .pin-close-btn:hover {
+      background: var(--choc-main);
+      color: #FFFDF9;
+    }
+    .pin-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--border-lace);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 1.6rem;
+      box-shadow: 0 4px 12px rgba(92, 58, 33, 0.08);
+    }
+    .pin-modal-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--choc-dark);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .pin-modal-sub {
+      font-size: 0.85rem;
+      color: var(--choc-muted);
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+    .pin-input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-lace);
+      background: var(--bg-cream);
+      font-family: monospace;
+      font-size: 1.6rem;
+      letter-spacing: 10px;
+      text-align: center;
+      color: var(--choc-dark);
+      outline: none;
+      transition: var(--transition);
+      margin-bottom: 10px;
+    }
+    .pin-input:focus {
+      border-color: var(--choc-main);
+      box-shadow: 0 0 0 3px rgba(92, 58, 33, 0.15);
+      background: #FFF;
+    }
+    .pin-error-msg {
+      font-size: 0.82rem;
+      color: #c2410c;
+      min-height: 20px;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+    .pin-btn-submit {
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: var(--radius-full);
+      background: var(--choc-main);
+      color: #FFFDF9;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(92, 58, 33, 0.2);
+    }
+    .pin-btn-submit:hover {
+      background: var(--choc-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(92, 58, 33, 0.3);
+    }
+    .pin-hint-tag {
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: var(--choc-muted);
+      background: var(--bg-cream-soft);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      display: inline-block;
+    }
+
+    /* 2. Admin Drawer Slide-Over Panel */
+    .admin-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(25, 16, 12, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 10001;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .admin-drawer-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .admin-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 760px;
+      background: var(--bg-cream);
+      box-shadow: -15px 0 50px rgba(68, 41, 23, 0.25);
+      z-index: 10002;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border-left: 1.5px solid var(--border-lace);
+    }
+    .admin-drawer-backdrop.active .admin-drawer {
+      transform: translateX(0);
+    }
+
+    /* Drawer Header */
+    .admin-drawer-header {
+      padding: 20px 28px;
+      background: var(--bg-card);
+      border-bottom: 1.5px solid var(--border-lace);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+    .admin-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .admin-avatar-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--bg-biscuit);
+      border: 1px solid var(--border-lace);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+    .admin-header-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--choc-dark);
+      line-height: 1.2;
+    }
+    .admin-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #166534;
+      background: #dcfce7;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      margin-top: 4px;
+      border: 1px solid #bbf7d0;
+    }
+    .admin-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #16a34a;
+    }
+    .admin-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .btn-admin-logout {
+      background: var(--bg-cream-soft);
+      border: 1px solid var(--border-lace);
+      color: var(--choc-medium);
+      padding: 7px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+    .btn-admin-logout:hover {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fca5a5;
+    }
+    .btn-admin-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-biscuit);
+      border: 1px solid var(--border-lace);
+      color: var(--choc-dark);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .btn-admin-close:hover {
+      background: var(--choc-main);
+      color: #FFF;
+    }
+
+    /* Tabs Bar */
+    .admin-tabs-bar {
+      display: flex;
+      background: var(--bg-card);
+      border-bottom: 1.5px solid var(--border-lace);
+      padding: 0 24px;
+      overflow-x: auto;
+      gap: 8px;
+      flex-shrink: 0;
+      scrollbar-width: none;
+    }
+    .admin-tabs-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .admin-tab-btn {
+      padding: 14px 18px;
+      font-family: var(--font-body);
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--choc-muted);
+      background: transparent;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+    .admin-tab-btn:hover {
+      color: var(--choc-main);
+    }
+    .admin-tab-btn.active {
+      color: var(--choc-dark);
+      border-bottom-color: var(--choc-main);
+      font-weight: 700;
+    }
+
+    /* Drawer Scrollable Body */
+    .admin-drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-lace) transparent;
+    }
+    .admin-tab-content {
+      display: none;
+      animation: fadeInTab 0.3s ease;
+    }
+    .admin-tab-content.active {
+      display: block;
+    }
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Form Card Surfaces */
+    .adm-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-lace);
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .adm-card-title {
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--choc-dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px dashed var(--border-lace);
+      padding-bottom: 10px;
+    }
+    .adm-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 600px) {
+      .adm-form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .adm-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .adm-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--choc-dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .adm-label-hint {
+      font-size: 0.72rem;
+      font-weight: normal;
+      color: var(--choc-muted);
+    }
+    .adm-input, .adm-select, .adm-textarea {
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-lace);
+      background: var(--bg-cream);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      color: var(--choc-dark);
+      outline: none;
+      transition: var(--transition);
+      width: 100%;
+    }
+    .adm-input:focus, .adm-select:focus, .adm-textarea:focus {
+      border-color: var(--choc-main);
+      background: #FFF;
+      box-shadow: 0 0 0 3px rgba(92, 58, 33, 0.1);
+    }
+    .adm-textarea {
+      resize: vertical;
+      min-height: 72px;
+      line-height: 1.5;
+    }
+
+    /* Product Selector Banner */
+    .adm-product-selector-box {
+      background: var(--bg-cream-soft);
+      border: 1.5px solid var(--border-lace);
+      border-radius: 14px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .adm-prod-select {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-lace);
+      background: #FFF;
+      font-weight: 700;
+      color: var(--choc-dark);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* Visual Image Choice Selector */
+    .adm-img-options-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .adm-img-card {
+      border: 2px solid var(--border-lace);
+      border-radius: 12px;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--bg-cream);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .adm-img-card:hover {
+      border-color: var(--choc-light);
+    }
+    .adm-img-card.selected {
+      border-color: var(--choc-main);
+      background: #FFFDF9;
+      box-shadow: 0 0 0 2px rgba(92, 58, 33, 0.2);
+    }
+    .adm-img-preview {
+      width: 100%;
+      height: 85px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #1e152d;
+    }
+    .adm-img-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--choc-dark);
+      line-height: 1.2;
+    }
+
+    /* Drawer Footer (Sticky) */
+    .admin-drawer-footer {
+      padding: 18px 28px;
+      background: var(--bg-card);
+      border-top: 1.5px solid var(--border-lace);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 -4px 15px rgba(68, 41, 23, 0.05);
+    }
+    .btn-admin-cancel {
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      background: var(--bg-biscuit);
+      border: 1px solid var(--border-lace);
+      color: var(--choc-main);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.88rem;
+    }
+    .btn-admin-cancel:hover {
+      background: #e5d7c3;
+    }
+    .btn-admin-save {
+      padding: 11px 26px;
+      border-radius: var(--radius-full);
+      background: var(--choc-main);
+      color: #FFFDF9;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(92, 58, 33, 0.25);
+    }
+    .btn-admin-save:hover {
+      background: var(--choc-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(92, 58, 33, 0.35);
+    }
+
+    /* Out of stock & Pre-order badges in stage & catalog */
+    .stage-stock-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-left: 10px;
+    }
+    .stock-ready {
+      background: rgba(34, 197, 94, 0.15);
+      color: #15803d;
+      border: 1px solid rgba(34, 197, 94, 0.35);
+    }
+    .stock-soldout {
+      background: rgba(239, 68, 68, 0.15);
+      color: #b91c1c;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+    .stock-preorder {
+      background: rgba(245, 158, 11, 0.15);
+      color: #b45309;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
   </style>
 </head>
 <body>
@@ -1572,7 +2060,7 @@
   <!-- ==================== HEADER ==================== -->
   <header class="site-header">
     <div class="container navbar">
-      <a href="#" class="brand-logo-wrap">
+      <a href="#" class="brand-logo-wrap" id="siteBrandLogo" title="Flowerjuicee Handmade">
         <img class="brand-logo-img" src="logo_flowerjuicee.jpg" alt="Logo Flowerjuicee">
         <div>
           <div class="brand-title">flowerjuicee</div>
@@ -1583,7 +2071,6 @@
       <ul class="nav-links">
         <li><a href="#hero" class="nav-link active">Beranda</a></li>
         <li><a href="#celestial-blooms" class="nav-link" style="color: #926E12; font-weight: 700;">✦ The Celestial Blooms</a></li>
-        <li><a href="#anime-personas" class="nav-link">🌸 Karakter Anime</a></li>
         <li><a href="#catalog" class="nav-link">Katalog Gelang</a></li>
         <li><a href="#gift-boxes" class="nav-link">Gift Box</a></li>
         <li><a href="#artisan-story" class="nav-link">Tentang Kami</a></li>
@@ -1611,13 +2098,13 @@
           </span>
         </div>
 
-        <h1 class="hero-heading">
-          Sentuhan Bunga Abadi, <br>
-          <span class="italic-highlight">ditenun dengan cinta</span> untuk hatimu.
+        <h1 class="hero-heading" id="heroMainHeading">
+          Made by hand, <br>
+          <span class="italic-highlight">chosen by you.</span>
         </h1>
 
-        <p class="hero-desc">
-          Setiap gelang Flowerjuicee dibuat dengan tangan menggunakan kawat pilin halus, kelopak bunga resin transparan bertepi emas murni, dan manik-manik kristal faset. Hadiah terindah untuk merayakan cinta, kelembutan, dan ketulusan.
+        <p class="hero-desc" id="heroMainDesc">
+          Explore our collection of handmade jewelry and find the pieces that suit your style. Choose your favorites, and place your order today. Happy shopping♡
         </p>
 
         <div class="hero-cta-group">
@@ -1647,7 +2134,7 @@
 
       <div class="hero-media-wrap">
         <div class="hero-card-frame">
-          <img class="hero-card-img" src="seven_celestial_blooms_refined_masterpiece.jpg" alt="Flowerjuicee Handmade Bracelets Collection">
+          <img class="hero-card-img" src="seven_celestial_blooms_real_master.jpg" alt="Flowerjuicee Handmade Bracelets Collection">
           
           <div class="hero-floating-badge">
             <img class="floating-logo-thumb" src="logo_flowerjuicee.jpg" alt="Flowerjuicee Logo">
@@ -1689,17 +2176,46 @@
       <!-- Interactive Stage -->
       <div class="celestial-display-stage" id="celestialDisplayStage">
         
-        <!-- Media Visual Frame -->
-        <div class="stage-media-wrap">
-          <img class="stage-visual-img" id="stageMainImage" src="seven_celestial_blooms_refined_masterpiece.jpg" alt="The Celestial Blooms">
-          <div class="stage-mode-switcher" id="stageModeSwitcher">
-            <button class="stage-mode-btn active" id="modeCosmicBtn">
-              <span>💎 Visual Kosmik</span>
+        <!-- Media Visual Frame (Interactive 2-Photo Slider) -->
+        <div class="stage-media-wrap" id="stageMediaWrap">
+          <!-- Slide Badge: Info Foto 1 atau 2 -->
+          <div class="stage-slide-badge" id="stageSlideBadge">
+            <span>📷 1 / 2 • Sample Tangan</span>
+          </div>
+
+          <!-- Slider Track -->
+          <div class="stage-slider-track" id="stageSliderTrack">
+            <!-- Slide 1: Foto Pemakaian di Tangan -->
+            <div class="stage-slide" id="stageSlide1">
+              <img class="stage-visual-img" id="stageSlideImg1" src="gelang_hand_cream_1_azure.jpg" alt="Sample Pemakaian di Tangan" loading="eager">
+            </div>
+            <!-- Slide 2: Foto Detail Real Kosmik -->
+            <div class="stage-slide" id="stageSlide2">
+              <img class="stage-visual-img" id="stageSlideImg2" src="gelang_azure_real_kosmik_master.jpg" alt="Detail Real Kosmik" loading="lazy">
+            </div>
+          </div>
+
+          <!-- Slide Navigation Arrows -->
+          <button type="button" class="stage-slide-arrow prev" id="stageSlidePrevBtn" aria-label="Foto Sebelumnya" title="Foto Sebelumnya (Geser Kiri)">
+            <span>&#10094;</span>
+          </button>
+          <button type="button" class="stage-slide-arrow next" id="stageSlideNextBtn" aria-label="Foto Selanjutnya" title="Foto Selanjutnya (Geser Kanan)">
+            <span>&#10095;</span>
+          </button>
+
+          <!-- Slide Indicator Dots / Pills -->
+          <div class="stage-slide-indicators" id="stageSlideIndicators">
+            <button type="button" class="slide-dot-btn active" id="slideDot0" onclick="setStageSlide(0)">
+              <span class="slide-dot-dot"></span>
+              <span>Tangan</span>
             </button>
-            <button class="stage-mode-btn" id="modeAnimeBtn">
-              <span>🌸 Karakter Anime</span>
+            <button type="button" class="slide-dot-btn" id="slideDot1" onclick="setStageSlide(1)">
+              <span class="slide-dot-dot"></span>
+              <span>Detail</span>
             </button>
           </div>
+
+          <!-- Master View Toggle Button -->
           <button class="stage-view-toggle" id="toggleMasterViewBtn">
             <span>🌌 Formasi 7-in-1 Master</span>
           </button>
@@ -1707,14 +2223,17 @@
 
         <!-- Details Drawer Panel -->
         <div class="stage-info-panel" id="stageInfoPanel">
-          <div class="stage-badge-tag" id="stageSymbolBadge">
-            🌟 Bintang Kejora (Morning Star)
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div class="stage-badge-tag" id="stageSymbolBadge">
+              🌟 Bintang Kejora (Morning Star)
+            </div>
+            <span class="stage-stock-tag stock-ready" id="stageStockBadge">Ready Stock</span>
           </div>
 
           <div>
             <h3 class="stage-product-title" id="stageProductTitle">STELLA MARIS</h3>
             <div class="stage-persona-tag" id="stagePersonaTag">
-              Persona: <strong>Aoi</strong> · Tenang, Setia, Teduh
+              Karakter: <strong>Tenang, Setia, Teduh</strong> · Penuntun Arah
             </div>
           </div>
 
@@ -1733,17 +2252,17 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">Tipe Kawat</span>
-              <span class="spec-val">Coiled Silver Wire + Lobster Clasp</span>
+              <span class="spec-val" id="specWireType">Coiled Silver Wire + Lobster Clasp</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Kelopak</span>
-              <span class="spec-val">Resin Transparan + Tepi Emas</span>
+              <span class="spec-val" id="specPetalType">Resin Transparan + Tepi Emas</span>
             </div>
           </div>
 
           <div class="stage-price-row">
             <span class="stage-price-current" id="stagePriceVal">Rp 59.000</span>
-            <span class="stage-price-badge">Termasuk Fabric Pouch</span>
+            <span class="stage-price-badge" id="stagePriceBadge">Termasuk Fabric Pouch</span>
           </div>
 
           <div class="stage-actions-row">
@@ -1761,35 +2280,6 @@
     </div>
   </section>
 
-  <!-- ==================== 7 ANIME PERSONAS SHOWCASE ==================== -->
-  <section class="anime-personas-section" id="anime-personas">
-    <div class="container">
-      
-      <div class="anime-header">
-        <span class="badge-pill badge-cream">🌸 7 Karakter & Bidadari Bunga Semesta</span>
-        <h2 class="anime-title display-title">Karakter Anime Pemakai Gelang Flowerjuicee</h2>
-        <p class="anime-sub">
-          Setiap gelang The Celestial Blooms ditenun dengan jiwa dan personifikasi karakter anime yang merefleksikan pesona, warna kosmik, dan kelembutan pergelangan tangan pemakainya.
-        </p>
-        
-        <div class="section-divider">
-          <svg class="flower-icon-divider" viewBox="0 0 100 100" fill="#5C3A21">
-            <circle cx="50" cy="50" r="14"/>
-            <circle cx="50" cy="18" r="12"/><circle cx="50" cy="82" r="12"/>
-            <circle cx="18" cy="50" r="12"/><circle cx="82" cy="50" r="12"/>
-            <circle cx="27" cy="27" r="12"/><circle cx="73" cy="73" r="12"/>
-            <circle cx="27" cy="73" r="12"/><circle cx="73" cy="27" r="12"/>
-          </svg>
-        </div>
-      </div>
-
-      <!-- 7 Anime Persona Cards Grid -->
-      <div class="anime-grid" id="animeCardsGrid">
-        <!-- Rendered dynamically by JavaScript -->
-      </div>
-
-    </div>
-  </section>
 
   <!-- ==================== E-COMMERCE CATALOG ==================== -->
   <section class="catalog-section" id="catalog">
@@ -2017,206 +2507,580 @@
     </div>
   </footer>
 
-  <!-- ==================== JAVASCRIPT ==================== -->
-  <script>
-    // --- 1. DATA MASTER THE 7 CELESTIAL BLOOMS ---
-    const celestialVariants = [
-      {
-        id: "var-1",
-        num: 1,
-        name: "STELLA MARIS",
-        symbol: "🌟 Bintang Kejora (The Morning Star)",
-        flowerColor: "Sky Azure Blue",
-        gemstone: "Safir Biru Fajar",
-        persona: "Aoi",
-        animeName: "Aoi (蒼)",
-        animeTitle: "Sang Penjaga Fajar Samudra",
-        traits: "Tenang, Setia, Teduh, Penuntun Arah",
-        quote: "Di antara ombak dunia yang bising, senyumanmu adalah dermaga paling tenang di hatiku.",
-        image: "char_visual_1_blue_1791478163746.jpg",
-        animeImage: "anime_aoi_blue_1791474822824.jpg",
-        gemColor: "#38bdf8",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 60%, #080d1a 100%)",
-        desc: "Mewakili kejernihan langit fajar sesaat sebelum matahari terbit. Karakter wanita yang teduh dan selalu menjadi tempat pulang paling nyaman."
-      },
-      {
-        id: "var-2",
-        num: 2,
-        name: "SOLAR SOLSTICE",
-        symbol: "☀️ Surya Senja (Golden Solstice)",
-        flowerColor: "Honey Amber Peach",
-        gemstone: "Kristal Amber Keemasan",
-        persona: "Kohaku",
-        animeName: "Kohaku (琥珀)",
-        animeTitle: "Sang Pelindung Surya Senja",
-        traits: "Hangat, Penuh Kasih, Penyembuh Lelah",
-        quote: "Senyumanmu seperti cahaya matahari sore: selalu memberi kehangatan lembut yang merasuk ke dalam hati.",
-        image: "char_visual_2_amber_1791478190291.jpg",
-        animeImage: "anime_kohaku_amber_1791474844459.jpg",
-        gemColor: "#fbbf24",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #3b2810 0%, #1c1408 60%, #0c0803 100%)",
-        desc: "Mewakili hangatnya sinar matahari sore musim gugur. Sosok wanita penuh perhatian yang senyumnya menyembuhkan rasa lelah seharian."
-      },
-      {
-        id: "var-3",
-        num: 3,
-        name: "LUNA CRESCENT",
-        symbol: "🌙 Bulan Sabit Mutiara",
-        flowerColor: "Sakura Blush Pink",
-        gemstone: "Mutiara Baby Pink",
-        persona: "Sakurako",
-        animeName: "Sakurako (桜子)",
-        animeTitle: "Bidadari Bulan Sabit Murni",
-        traits: "Manis, Pemalu, Murni, Romantis",
-        quote: "Mencintaimu itu seperti menatap bulan sabit pertama kali: manis, murni, dan selalu membuat hatiku berdebar.",
-        image: "char_visual_3_pink_1791478220943.jpg",
-        animeImage: "anime_sakurako_pink_1791474883069.jpg",
-        gemColor: "#f472b6",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #36172a 0%, #1f0d19 60%, #0f060c 100%)",
-        desc: "Terinspirasi dari debaran cinta pertama. Sosok gadis manis pemalu yang merekah bagai bunga sakura di bawah rembulan muda."
-      },
-      {
-        id: "var-4",
-        num: 4,
-        name: "COSMIC NOVA",
-        symbol: "🌠 Bintang Jatuh (Shooting Star)",
-        flowerColor: "Vivid Magenta Fuchsia",
-        gemstone: "Kristal Raspberry Berkau",
-        persona: "Rion",
-        animeName: "Rion (莉音)",
-        animeTitle: "Sang Percikan Bintang Jatuh",
-        traits: "Ceria, Energik, Pembawa Sukacita",
-        quote: "Dulu aku selalu berdoa saat melihat bintang jatuh; sekarang doa itu terkabul dalam bentuk dirimu yang selalu membawa tawa.",
-        image: "char_visual_4_magenta_1791478250755.jpg",
-        animeImage: "anime_rion_magenta_1791474913795.jpg",
-        gemColor: "#e11d48",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #3a0d24 0%, #1e0612 60%, #0f0309 100%)",
-        desc: "Bintang jatuh yang membelah malam dengan warna paling berani. Sosok periang yang selalu mewarnai hari dengan gelak tawa."
-      },
-      {
-        id: "var-5",
-        num: 5,
-        name: "MIDNIGHT GALAXY",
-        symbol: "🌌 Bulan Purnama & Galaksi",
-        flowerColor: "Royal Deep Purple",
-        gemstone: "Kristal Ametis Malam",
-        persona: "Shion",
-        animeName: "Shion (紫苑)",
-        animeTitle: "Ratu Galaksi Tengah Malam",
-        traits: "Anggun, Berkelas, Magis, Agung",
-        quote: "Dari miliaran bintang di seluruh galaksi ini, semesta menuntunku untuk menemukan satu-satunya dirimu.",
-        image: "char_visual_5_violet_1791478305584.jpg",
-        animeImage: "anime_shion_violet_1791474940597.jpg",
-        gemColor: "#9333ea",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #29153d 0%, #170b24 60%, #0b0512 100%)",
-        desc: "Langit tengah malam yang agung. Sosok wanita anggun mandiri yang pesonanya telah ditakdirkan oleh semesta sejak awal."
-      },
-      {
-        id: "var-6",
-        num: 6,
-        name: "CELESTIA BOREALIS",
-        symbol: "💜 Tirai Cahaya Aurora Kutub",
-        flowerColor: "Pastel Lilac Ombre",
-        gemstone: "Lavender Quartz",
-        persona: "Sumire",
-        animeName: "Sumire (菫)",
-        animeTitle: "Peri Tirai Cahaya Aurora",
-        traits: "Puitis, Pemimpi, Lembut & Damai",
-        quote: "Bagai tarian aurora di langit sunyi, hadirmu membawa warna magis yang memeluk setiap sudut hati.",
-        image: "char_visual_6_aurora_1791478507393.jpg",
-        animeImage: "aurora_lilac_bracelet_1791477723723.jpg",
-        gemColor: "#a855f7",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #201c3d 0%, #100e21 60%, #080712 100%)",
-        desc: "Tarian aurora kutub yang lembut puitis. Sosok pemimpi artistik yang membawa kedamaian menyejukkan bagai mimpi indah."
-      },
-      {
-        id: "var-7",
-        num: 7,
-        name: "STELLA GLACIALIS",
-        symbol: "❄️ Kristal Es Prisma & Embun",
-        flowerColor: "Frosted Glacial Cyan",
-        gemstone: "Kristal Opal Es Murni",
-        persona: "Yuki",
-        animeName: "Yuki (雪)",
-        animeTitle: "Dewi Embun & Kristal Es",
-        traits: "Murni, Sejuk, Sebening Embun Fajar",
-        quote: "Semurni kristal es dan sebening tetesan embun pertama fajar, ketulusan kasihmu takkan pernah ternoda.",
-        image: "char_visual_7_glacial_1791478524604.jpg",
-        animeImage: "glacial_dew_bracelet_1791477745940.jpg",
-        gemColor: "#38bdf8",
-        price: 59000,
-        bgGradient: "radial-gradient(circle at 50% 30%, #102636 0%, #08151f 60%, #04090f 100%)",
-        desc: "Bunga es kosmik yang mekar di pagi musim dingin. Menghadirkan kesejukan murni, ketulusan tanpa syarat, dan rasa damai sejernih embun."
-      }
-    ];
+  <!-- ==================== HIDDEN ADMIN SYSTEM (EASTER EGG) ==================== -->
+  <!-- 1. Secret PIN Authentication Modal -->
+  <div class="admin-pin-backdrop" id="adminPinBackdrop" aria-hidden="true">
+    <div class="admin-pin-modal" role="dialog" aria-modal="true" aria-labelledby="pinModalTitle">
+      <button class="pin-close-btn" id="closePinModalBtn" aria-label="Tutup PIN Modal">&times;</button>
+      <div class="pin-icon-wrap">🌸</div>
+      <h3 class="pin-modal-title" id="pinModalTitle">Flowerjuicee Atelier</h3>
+      <p class="pin-modal-sub">Akses Khusus Pemilik & Pengelola Toko</p>
 
-    const masterFrameData = {
-      name: "THE 7 CELESTIAL BLOOMS (MASTER FORMATION)",
-      symbol: "👑 Lingkaran Rasi Bintang Lengkap",
-      flowerColor: "7 Warna Lengkap Semesta",
-      gemstone: "Multi-Gemstone Pleiades",
-      persona: "Tujuh Bidadari Surga",
-      traits: "Harmoni Cinta Abadi 7 Hari",
-      quote: "Tujuh bunga semesta di bawah sinar rembulan dan bintang, ditenun dengan cinta abadi.",
-      image: "seven_celestial_blooms_refined_masterpiece.jpg",
-      price: 399000,
-      bgGradient: "radial-gradient(circle at 50% 30%, #291c42 0%, #171126 60%, #0d0917 100%)"
+      <form id="adminPinForm" onsubmit="event.preventDefault(); verifyAdminPin();">
+        <input type="password" id="adminPinInput" class="pin-input" maxlength="6" placeholder="••••" autocomplete="off" inputmode="numeric">
+        <div class="pin-error-msg" id="pinErrorMsg"></div>
+        <button type="submit" class="pin-btn-submit" id="submitPinBtn">
+          <span>Masuk ke Panel Pengelola</span>
+        </button>
+      </form>
+      <div class="pin-hint-tag">Default PIN: <code>1234</code></div>
+    </div>
+  </div>
+
+  <!-- 2. Admin Slide-Over Manager Drawer -->
+  <div class="admin-drawer-backdrop" id="adminDrawerBackdrop" aria-hidden="true">
+    <aside class="admin-drawer" id="adminDrawer" role="dialog" aria-modal="true" aria-label="Panel Pengelola Toko">
+      <!-- Header -->
+      <div class="admin-drawer-header">
+        <div class="admin-header-left">
+          <div class="admin-avatar-icon">👑</div>
+          <div>
+            <div class="admin-header-title">Flowerjuicee Storefront Manager</div>
+            <div class="admin-status-pill">
+              <span class="admin-status-dot"></span>
+              <span>Admin Mode: Aktif</span>
+            </div>
+          </div>
+        </div>
+        <div class="admin-header-actions">
+          <button class="btn-admin-logout" id="adminLogoutBtn" title="Kunci Admin & Keluar" onclick="logoutAdmin()">
+            <span>🔒 Keluar</span>
+          </button>
+          <button class="btn-admin-close" id="closeAdminDrawerBtn" aria-label="Tutup Panel">&times;</button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-tabs-bar">
+        <button class="admin-tab-btn active" data-tab="tab-product" onclick="switchAdminTab('tab-product')">
+          <span>📦 Detail Gelang & Showcase</span>
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-hero" onclick="switchAdminTab('tab-hero')">
+          <span>✍️ Jargon & Teks</span>
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-contact" onclick="switchAdminTab('tab-contact')">
+          <span>📱 WhatsApp & Kontak</span>
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-backup" onclick="switchAdminTab('tab-backup')">
+          <span>⚙️ Keamanan & Backup</span>
+        </button>
+      </div>
+
+      <!-- Drawer Body -->
+      <div class="admin-drawer-body">
+        
+        <!-- TAB 1: PRODUCT & SHOWCASE EDITOR -->
+        <div class="admin-tab-content active" id="tab-product">
+          
+          <div class="adm-product-selector-box">
+            <div>
+              <div style="font-size: 0.82rem; font-weight: 700; color: var(--choc-main); text-transform: uppercase;">Pilih Gelang yang Ingin Diedit:</div>
+              <div style="font-size: 0.74rem; color: var(--choc-muted);">Ubah teks, spesifikasi, harga, stok, & foto</div>
+            </div>
+            <select class="adm-prod-select" id="admProductPicker" onchange="loadProductToAdminForm(this.value)">
+              <!-- Options populated dynamically -->
+            </select>
+          </div>
+
+          <!-- Card 1: Identitas & Nama -->
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>🌸 Identitas & Filosofi Produk</span>
+            </div>
+            
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Nama Gelang <span class="adm-label-hint">Judul Utama</span></label>
+                <input type="text" class="adm-input" id="admName" placeholder="Contoh: STELLA GLACIALIS">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Simbol & Rasi <span class="adm-label-hint">Badge Atas</span></label>
+                <input type="text" class="adm-input" id="admSymbol" placeholder="Contoh: ❄️ Kristal Es Prisma">
+              </div>
+            </div>
+
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Filosofi Persona <span class="adm-label-hint">Sub-judul</span></label>
+                <input type="text" class="adm-input" id="admPersona" placeholder="Contoh: Embun Murni & Sejuk">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Karakter / Sifat <span class="adm-label-hint">Traits</span></label>
+                <input type="text" class="adm-input" id="admTraits" placeholder="Contoh: Murni, Sejuk, Sebening Embun Fajar">
+              </div>
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">Kutipan Puitis (Quote Box) <span class="adm-label-hint">Kalimat romantis</span></label>
+              <textarea class="adm-textarea" id="admQuote" rows="3" placeholder="Tulis kutipan puitis untuk gelang ini..."></textarea>
+            </div>
+          </div>
+
+          <!-- Card 2: 4 Spesifikasi Showcase -->
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>💎 4 Kotak Spesifikasi Produk (Showcase Grid)</span>
+            </div>
+            
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Warna Bunga <span class="adm-label-hint">Kotak 1</span></label>
+                <input type="text" class="adm-input" id="admFlowerColor" placeholder="Contoh: Frosted Glacial Cyan">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Batu Kristal <span class="adm-label-hint">Kotak 2</span></label>
+                <input type="text" class="adm-input" id="admGemstone" placeholder="Contoh: Kristal Opal Es Murni">
+              </div>
+            </div>
+
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Tipe Kawat <span class="adm-label-hint">Kotak 3</span></label>
+                <input type="text" class="adm-input" id="admWireType" placeholder="Contoh: Coiled Silver Wire + Lobster Clasp">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Kelopak <span class="adm-label-hint">Kotak 4</span></label>
+                <input type="text" class="adm-input" id="admPetalType" placeholder="Contoh: Resin Transparan + Tepi Emas">
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Harga & Status Stok -->
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>💰 Harga & Ketersediaan Stok</span>
+            </div>
+
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Harga (Rupiah) <span class="adm-label-hint">Angka saja</span></label>
+                <input type="number" class="adm-input" id="admPrice" placeholder="59000" min="1000" step="1000">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Teks Badge Harga <span class="adm-label-hint">Bonus / Kelengkapan</span></label>
+                <input type="text" class="adm-input" id="admPriceBadge" placeholder="Termasuk Fabric Pouch">
+              </div>
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">Status Stok Produk</label>
+              <select class="adm-select" id="admStock">
+                <option value="ready">🟢 Ready Stock (Bisa Dipesan & Masuk Keranjang)</option>
+                <option value="sold_out">🔴 Sold Out / Habis (Tombol Nonaktif "Stok Habis")</option>
+                <option value="pre_order">🟡 Pre-Order (PO) (Tombol Berubah "Pre-Order")</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Card 4: Pengaturan Slider 2 Foto Gelang -->
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>🖼️ Pengaturan Slider 2 Foto Gelang</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--choc-muted); margin-bottom: 12px;">
+              Setiap opsi gelang memiliki 2 foto (Foto 1: Sample Tangan & Foto 2: Detail Real Kosmik) yang dapat dislide di panggung showcase:
+            </div>
+
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Foto 1: Sample di Tangan <span class="adm-label-hint">Slide Pertama</span></label>
+                <input type="text" class="adm-input" id="admImgHand" placeholder="Contoh: gelang_hand_cream_1_azure.jpg">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Foto 2: Detail Real Kosmik <span class="adm-label-hint">Slide Kedua</span></label>
+                <input type="text" class="adm-input" id="admImgMaster" placeholder="Contoh: gelang_azure_real_kosmik_master.jpg">
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+              <button type="button" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.78rem;" onclick="swapAdminSlidePhotos()">
+                <span>⇄ Tukar Posisi Foto 1 & 2</span>
+              </button>
+            </div>
+
+            <!-- Preview 2 Foto Slider -->
+            <div class="adm-img-options-group" id="admImgOptionsGroup" style="margin-top: 14px;">
+              <!-- Dynamically populated per variant with Slide 1 & Slide 2 previews -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TAB 2: HERO & TEXT CONTENT -->
+        <div class="admin-tab-content" id="tab-hero">
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>✍️ Slogan & Deskripsi Utama (Hero Section)</span>
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">Judul Jargon Hero</label>
+              <input type="text" class="adm-input" id="admHeroTitle" placeholder="Made by hand, chosen by you.">
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">Deskripsi Lengkap Hero</label>
+              <textarea class="adm-textarea" id="admHeroDesc" rows="4" placeholder="Explore our collection of handmade jewelry..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: WHATSAPP & CONTACT -->
+        <div class="admin-tab-content" id="tab-contact">
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>📱 Nomor & Format WhatsApp Pemesanan</span>
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">Nomor WhatsApp Admin (Format Indonesia: 08... atau 628...)</label>
+              <input type="text" class="adm-input" id="admWaNumber" placeholder="082258895545">
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">Template Chat Pemesanan WhatsApp</label>
+              <textarea class="adm-textarea" id="admWaTemplate" rows="3" placeholder="Halo Flowerjuicee! Saya ingin memesan Gelang The Celestial Blooms varian *{name}* ({flowerColor}) seharga Rp {price}."></textarea>
+              <div style="font-size: 0.74rem; color: var(--choc-muted); margin-top: 4px;">Gunakan tag <code>{name}</code>, <code>{flowerColor}</code>, <code>{price}</code> untuk diganti otomatis.</div>
+            </div>
+
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">Akun Instagram</label>
+                <input type="text" class="adm-input" id="admInstagram" placeholder="@fflowerjuicee">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Akun TikTok</label>
+                <input type="text" class="adm-input" id="admTiktok" placeholder="flowerjuicee">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: SECURITY & BACKUP -->
+        <div class="admin-tab-content" id="tab-backup">
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>🔒 Ubah PIN Keamanan Admin</span>
+            </div>
+
+            <div class="adm-form-row">
+              <div class="adm-form-group">
+                <label class="adm-label">PIN Baru (4-6 digit angka)</label>
+                <input type="password" class="adm-input" id="admNewPin" placeholder="PIN Baru" maxlength="6" inputmode="numeric">
+              </div>
+              <div class="adm-form-group">
+                <label class="adm-label">Konfirmasi PIN Baru</label>
+                <input type="password" class="adm-input" id="admConfirmPin" placeholder="Ulangi PIN Baru" maxlength="6" inputmode="numeric">
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline" style="padding: 8px 18px; font-size: 0.82rem;" onclick="changeAdminPin()">
+              <span>Simpan PIN Baru</span>
+            </button>
+          </div>
+
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>💾 Cadangkan & Pulihkan Pengaturan (Backup/Restore)</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--choc-muted); margin-bottom: 14px;">
+              Unduh cadangan pengaturan toko Anda atau pulihkan dari file JSON yang telah disimpan.
+            </div>
+
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-outline" style="padding: 8px 18px; font-size: 0.82rem;" onclick="exportStoreConfig()">
+                <span>📥 Unduh Backup JSON</span>
+              </button>
+              <button type="button" class="btn btn-outline" style="padding: 8px 18px; font-size: 0.82rem;" onclick="document.getElementById('admImportFileInput').click()">
+                <span>📤 Pulihkan dari Backup JSON</span>
+              </button>
+              <button type="button" class="btn-admin-logout" style="padding: 8px 18px; font-size: 0.82rem; margin-left: auto;" onclick="resetStoreConfigToDefault()">
+                <span>⚠️ Reset ke Default Pabrik</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="admin-drawer-footer">
+        <button class="btn-admin-cancel" id="cancelAdminDrawerBtn">Tutup</button>
+        <button class="btn-admin-save" id="saveAdminDrawerBtn" onclick="saveAdminChanges()">
+          <span>💾 Simpan & Terapkan Perubahan</span>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <input type="file" id="admImportFileInput" accept=".json" style="display: none;">
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // --- 1. DEFAULT DATA CONFIGURATION (FLOWERJUICEE STOREFRONT) ---
+    const DEFAULT_STORE_CONFIG = {
+      // SHA-256 for default PIN "1234"
+      pinHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+      heroTitle: "Made by hand, chosen by you.",
+      heroDesc: "Explore our collection of handmade jewelry and find the pieces that suit your style. Choose your favorites, and place your order today. Happy shopping♡",
+      waNumber: "082258895545",
+      waTemplate: "Halo Flowerjuicee! Saya ingin memesan Gelang The Celestial Blooms varian *{name}* ({flowerColor}) seharga Rp {price}.",
+      instagram: "@fflowerjuicee",
+      tiktok: "flowerjuicee",
+      masterFrame: {
+        id: "master-frame",
+        name: "THE 7 CELESTIAL BLOOMS (MASTER FORMATION)",
+        symbol: "👑 Lingkaran Rasi Bintang Lengkap",
+        persona: "Tujuh Bidadari Surga",
+        traits: "Harmoni Cinta Abadi 7 Hari",
+        quote: "Tujuh bunga semesta di bawah sinar rembulan dan bintang, ditenun dengan cinta abadi.",
+        flowerColor: "7 Warna Lengkap Semesta",
+        gemstone: "Multi-Gemstone Pleiades",
+        wireType: "Coiled Silver Wire + Lobster Clasp",
+        petalType: "Resin Transparan + Tepi Emas",
+        price: 399000,
+        priceBadge: "Termasuk Exclusive Wooden Box & Pouch",
+        image: "seven_celestial_blooms_real_master.jpg",
+        imageHand: "seven_celestial_blooms_refined_masterpiece.jpg",
+        stock: "ready",
+        bgGradient: "radial-gradient(circle at 50% 30%, #291c42 0%, #171126 60%, #0d0917 100%)"
+      },
+      variants: [
+        {
+          id: "var-1",
+          num: 1,
+          name: "STELLA MARIS",
+          symbol: "🌟 Bintang Kejora (The Morning Star)",
+          persona: "Fajar Teduh & Setia",
+          traits: "Tenang, Setia, Teduh, Penuntun Arah",
+          quote: "Di antara ombak dunia yang bising, senyumanmu adalah dermaga paling tenang di hatiku.",
+          flowerColor: "Sky Azure Blue",
+          gemstone: "Safir Biru Fajar",
+          wireType: "Coiled Silver Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_azure_real_kosmik_master.jpg",
+          imageHand: "gelang_hand_cream_1_azure.jpg",
+          stock: "ready",
+          gemColor: "#38bdf8",
+          bgGradient: "radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 60%, #080d1a 100%)",
+          desc: "Mewakili kejernihan langit fajar sesaat sebelum matahari terbit. Karakter wanita yang teduh dan selalu menjadi tempat pulang paling nyaman."
+        },
+        {
+          id: "var-2",
+          num: 2,
+          name: "SOLAR SOLSTICE",
+          symbol: "☀️ Surya Senja (Golden Solstice)",
+          persona: "Surya Hangat & Penuh Kasih",
+          traits: "Hangat, Penuh Kasih, Penyembuh Lelah",
+          quote: "Senyumanmu seperti cahaya matahari sore: selalu memberi kehangatan lembut yang merasuk ke dalam hati.",
+          flowerColor: "Honey Amber Peach",
+          gemstone: "Kristal Amber Keemasan",
+          wireType: "Coiled Gold Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_amber_real_kosmik_master.jpg",
+          imageHand: "gelang_hand_cream_2_amber.jpg",
+          stock: "ready",
+          gemColor: "#fbbf24",
+          bgGradient: "radial-gradient(circle at 50% 30%, #3b2810 0%, #1c1408 60%, #0c0803 100%)",
+          desc: "Mewakili hangatnya sinar matahari sore musim gugur. Sosok wanita penuh perhatian yang senyumnya menyembuhkan rasa lelah seharian."
+        },
+        {
+          id: "var-3",
+          num: 3,
+          name: "LUNA CRESCENT",
+          symbol: "🌙 Bulan Sabit Mutiara",
+          persona: "Rembulan Manis & Romantis",
+          traits: "Manis, Pemalu, Murni, Romantis",
+          quote: "Mencintaimu itu seperti menatap bulan sabit pertama kali: manis, murni, dan selalu membuat hatiku berdebar.",
+          flowerColor: "Sakura Blush Pink",
+          gemstone: "Mutiara Baby Pink",
+          wireType: "Coiled Silver Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_sakura_real_kosmik_master.jpg",
+          imageHand: "gelang_hand_cream_3_sakura.jpg",
+          stock: "ready",
+          gemColor: "#f472b6",
+          bgGradient: "radial-gradient(circle at 50% 30%, #36172a 0%, #1f0d19 60%, #0f060c 100%)",
+          desc: "Terinspirasi dari debaran cinta pertama. Sosok gadis manis pemalu yang merekah bagai bunga sakura di bawah rembulan muda."
+        },
+        {
+          id: "var-4",
+          num: 4,
+          name: "COSMIC NOVA",
+          symbol: "🌠 Bintang Jatuh (Shooting Star)",
+          persona: "Bintang Nova Ceria & Sukacita",
+          traits: "Ceria, Energik, Pembawa Sukacita",
+          quote: "Dulu aku selalu berdoa saat melihat bintang jatuh; sekarang doa itu terkabul dalam bentuk dirimu yang selalu membawa tawa.",
+          flowerColor: "Vivid Magenta Fuchsia",
+          gemstone: "Kristal Raspberry Berkau",
+          wireType: "Coiled Silver Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_magenta_real_kosmik_master.jpg",
+          imageHand: "gelang_hand_cream_4_magenta.jpg",
+          stock: "ready",
+          gemColor: "#e11d48",
+          bgGradient: "radial-gradient(circle at 50% 30%, #3a0d24 0%, #1e0612 60%, #0f0309 100%)",
+          desc: "Bintang jatuh yang membelah malam dengan warna paling berani. Sosok periang yang selalu mewarnai hari dengan gelak tawa."
+        },
+        {
+          id: "var-5",
+          num: 5,
+          name: "MIDNIGHT GALAXY",
+          symbol: "🌌 Bulan Purnama & Galaksi",
+          persona: "Galaksi Anggun & Magis",
+          traits: "Anggun, Berkelas, Magis, Agung",
+          quote: "Dari miliaran bintang di seluruh galaksi ini, semesta menuntunku untuk menemukan satu-satunya dirimu.",
+          flowerColor: "Royal Deep Purple",
+          gemstone: "Kristal Ametis Malam",
+          wireType: "Coiled Silver Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_violet_real_kosmik_master.jpg",
+          imageHand: "gelang_hand_cream_5_violet.jpg",
+          stock: "ready",
+          gemColor: "#9333ea",
+          bgGradient: "radial-gradient(circle at 50% 30%, #29153d 0%, #170b24 60%, #0b0512 100%)",
+          desc: "Langit tengah malam yang agung. Sosok wanita anggun mandiri yang pesonanya telah ditakdirkan oleh semesta sejak awal."
+        },
+        {
+          id: "var-6",
+          num: 6,
+          name: "CELESTIA BOREALIS",
+          symbol: "💜 Tirai Cahaya Aurora Kutub",
+          persona: "Aurora Lembut & Puitis",
+          traits: "Puitis, Pemimpi, Lembut & Damai",
+          quote: "Bagai tarian aurora di langit sunyi, hadirmu membawa warna magis yang memeluk setiap sudut hati.",
+          flowerColor: "Pastel Lilac Ombre",
+          gemstone: "Lavender Quartz",
+          wireType: "Coiled Silver Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_real_kosmik_pure_master.jpg",
+          imageHand: "gelang_hand_cream_6_lilac.jpg",
+          stock: "ready",
+          gemColor: "#a855f7",
+          bgGradient: "radial-gradient(circle at 50% 30%, #201c3d 0%, #100e21 60%, #080712 100%)",
+          desc: "Tarian aurora kutub yang lembut puitis. Sosok pemimpi artistik yang membawa kedamaian menyejukkan bagai mimpi indah."
+        },
+        {
+          id: "var-7",
+          num: 7,
+          name: "STELLA GLACIALIS",
+          symbol: "❄️ Kristal Es Prisma & Embun",
+          persona: "Embun Murni & Sejuk",
+          traits: "Murni, Sejuk, Sebening Embun Fajar",
+          quote: "Semurni kristal es dan sebening tetesan embun pertama fajar, ketulusan kasihmu takkan pernah ternoda.",
+          flowerColor: "Frosted Glacial Cyan",
+          gemstone: "Kristal Opal Es Murni",
+          wireType: "Coiled Silver Wire + Lobster Clasp",
+          petalType: "Resin Transparan + Tepi Emas",
+          price: 59000,
+          priceBadge: "Termasuk Fabric Pouch",
+          image: "gelang_glacial_real_kosmik_master.jpg",
+          imageHand: "gelang_hand_cream_7_aqua.jpg",
+          stock: "ready",
+          gemColor: "#38bdf8",
+          bgGradient: "radial-gradient(circle at 50% 30%, #102636 0%, #08151f 60%, #04090f 100%)",
+          desc: "Bunga es kosmik yang mekar di pagi musim dingin. Menghadirkan kesejukan murni, ketulusan tanpa syarat, dan rasa damai sejernih embun."
+        }
+      ]
     };
 
-    // --- 2. CATALOG PRODUCTS DATA ---
-    const catalogProducts = [
-      ...celestialVariants.map(v => ({
-        id: v.id,
-        name: v.name,
-        category: "celestial",
-        categoryLabel: "The Celestial Blooms",
-        persona: `Persona: ${v.persona}`,
-        price: v.price,
-        image: v.image,
-        badge: `Gelang ${v.num}`
-      })),
-      {
-        id: "prod-vault",
-        name: "Lucky Seven Collector Vault (7 Gelang)",
-        category: "bundle",
-        categoryLabel: "Koleksi Lengkap",
-        persona: "Semua 7 Karakter + Kotak Beludru",
-        price: 449000,
-        image: "seven_celestial_blooms_refined_masterpiece.jpg",
-        badge: "Special Collector"
-      },
-      {
-        id: "prod-sig-box",
-        name: "Signature Gift Box Set (1 Gelang Pilihan)",
-        category: "bundle",
-        categoryLabel: "Kado Spesial",
-        persona: "Hardbox Pita + Story Card + Mini Buket",
-        price: 99000,
-        image: "brand_card_flowerjuicee.jpg",
-        badge: "Best Seller Kado"
-      }
-    ];
-
-    // --- 3. STATE MANAGEMENT ---
+    // --- 2. CONFIG STATE MANAGEMENT ---
+    let storeConfig = loadStoreConfig();
+    let celestialVariants = storeConfig.variants;
+    let masterFrameData = storeConfig.masterFrame;
     let currentSelectedVariant = celestialVariants[0];
     let isMasterViewActive = false;
-    let stageVisualMode = 'cosmic'; // 'cosmic' or 'anime'
     let cart = [];
+    let currentlyEditingProductId = celestialVariants[0].id;
 
-    // --- 4. INITIALIZE THE CELESTIAL BLOOMS SELECTOR ---
+    function loadStoreConfig() {
+      try {
+        const saved = localStorage.getItem('flowerjuicee_store_config');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return { ...DEFAULT_STORE_CONFIG, ...parsed, variants: parsed.variants || DEFAULT_STORE_CONFIG.variants };
+        }
+      } catch (e) {
+        console.error("Error loading config:", e);
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG));
+    }
+
+    function saveStoreConfig() {
+      localStorage.setItem('flowerjuicee_store_config', JSON.stringify(storeConfig));
+    }
+
+    // SHA-256 Hash Helper
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // --- 3. REVEAL & APPLY CONFIG TO DOM ---
+    function applyStoreConfig() {
+      celestialVariants = storeConfig.variants;
+      masterFrameData = storeConfig.masterFrame;
+
+      // 1. Update Hero texts
+      const heroHead = document.getElementById('heroMainHeading');
+      if (heroHead && storeConfig.heroTitle) {
+        if (storeConfig.heroTitle.includes(',')) {
+          const parts = storeConfig.heroTitle.split(',');
+          heroHead.innerHTML = `${parts[0]}, <br><span class="italic-highlight">${parts.slice(1).join(',').trim()}</span>`;
+        } else {
+          heroHead.textContent = storeConfig.heroTitle;
+        }
+      }
+      const heroDesc = document.getElementById('heroMainDesc');
+      if (heroDesc && storeConfig.heroDesc) {
+        heroDesc.textContent = storeConfig.heroDesc;
+      }
+
+      // 2. Update WhatsApp links
+      const cleanWa = storeConfig.waNumber.replace(/[^0-9]/g, '');
+      const waIntl = cleanWa.startsWith('0') ? '62' + cleanWa.slice(1) : cleanWa;
+      document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+        if (a.id !== 'stageDirectOrderBtn') {
+          a.href = `https://wa.me/${waIntl}`;
+        }
+      });
+
+      // 3. Keep current selected variant reference fresh
+      const updatedVariant = celestialVariants.find(v => v.id === currentSelectedVariant.id);
+      if (updatedVariant) currentSelectedVariant = updatedVariant;
+
+      // 4. Re-render UI components
+      initCelestialSelector();
+      if (isMasterViewActive) {
+        renderMasterStage();
+      } else {
+        selectVariant(currentSelectedVariant);
+      }
+      renderCatalog();
+    }
+
+    // --- 4. CELESTIAL STAGE DISPLAY ---
     function initCelestialSelector() {
       const container = document.getElementById('variantSelectorBar');
+      if (!container) return;
       container.innerHTML = "";
 
       celestialVariants.forEach((v, index) => {
         const btn = document.createElement('button');
-        btn.className = `variant-pill-btn ${index === 0 ? 'active' : ''}`;
+        btn.className = `variant-pill-btn ${(!isMasterViewActive && currentSelectedVariant.id === v.id) ? 'active' : ''}`;
         btn.innerHTML = `
           <span class="pill-gem-dot" style="color: ${v.gemColor};"></span>
           <span>${v.num}. ${v.name}</span>
@@ -2227,130 +3091,348 @@
         });
         container.appendChild(btn);
       });
-
-      // Bind Mode Switcher (Cosmic vs Anime)
-      const btnCosmic = document.getElementById('modeCosmicBtn');
-      const btnAnime = document.getElementById('modeAnimeBtn');
-
-      if (btnCosmic && btnAnime) {
-        btnCosmic.addEventListener('click', () => {
-          if (stageVisualMode === 'cosmic' && !isMasterViewActive) return;
-          stageVisualMode = 'cosmic';
-          btnCosmic.classList.add('active');
-          btnAnime.classList.remove('active');
-          isMasterViewActive = false;
-          updateStageImage();
-        });
-
-        btnAnime.addEventListener('click', () => {
-          if (stageVisualMode === 'anime' && !isMasterViewActive) return;
-          stageVisualMode = 'anime';
-          btnAnime.classList.add('active');
-          btnCosmic.classList.remove('active');
-          isMasterViewActive = false;
-          updateStageImage();
-        });
-      }
     }
 
-    function updateStageImage() {
-      const mainImg = document.getElementById('stageMainImage');
-      mainImg.style.opacity = '0';
-      
-      setTimeout(() => {
+    // --- 4. CELESTIAL STAGE 2-PHOTO SLIDER ---
+    let currentStageSlideIndex = 0;
+
+    function setStageSlide(index) {
+      currentStageSlideIndex = (index === 1) ? 1 : 0;
+      const track = document.getElementById('stageSliderTrack');
+      if (track) {
+        track.style.transform = `translateX(-${currentStageSlideIndex * 50}%)`;
+      }
+
+      // Update Slide Badge
+      const badge = document.getElementById('stageSlideBadge');
+      if (badge) {
         if (isMasterViewActive) {
-          mainImg.src = masterFrameData.image;
-          mainImg.alt = masterFrameData.name;
+          badge.innerHTML = currentStageSlideIndex === 0 
+            ? `<span>👑 1 / 2 • Formasi Lingkaran</span>` 
+            : `<span>👑 2 / 2 • Formasi Lengkap</span>`;
         } else {
-          const targetSrc = (stageVisualMode === 'anime') ? currentSelectedVariant.animeImage : currentSelectedVariant.image;
-          mainImg.src = targetSrc;
-          mainImg.alt = `${currentSelectedVariant.name} - ${currentSelectedVariant.persona}`;
+          badge.innerHTML = currentStageSlideIndex === 0 
+            ? `<span>📷 1 / 2 • Sample Tangan</span>` 
+            : `<span>📷 2 / 2 • Detail Produk</span>`;
         }
-        mainImg.style.opacity = '1';
-      }, 200);
+      }
+
+      // Update Dot Buttons
+      const dot0 = document.getElementById('slideDot0');
+      const dot1 = document.getElementById('slideDot1');
+      if (dot0) dot0.classList.toggle('active', currentStageSlideIndex === 0);
+      if (dot1) dot1.classList.toggle('active', currentStageSlideIndex === 1);
+    }
+
+    function nextStageSlide() {
+      setStageSlide((currentStageSlideIndex + 1) % 2);
+    }
+
+    function prevStageSlide() {
+      setStageSlide((currentStageSlideIndex === 0) ? 1 : 0);
+    }
+
+    function updateStageSliderImages(img1, img2, altPrefix) {
+      const slideImg1 = document.getElementById('stageSlideImg1');
+      const slideImg2 = document.getElementById('stageSlideImg2');
+      if (slideImg1) {
+        slideImg1.src = img1 || 'gelang_hand_cream_1_azure.jpg';
+        slideImg1.alt = `${altPrefix} - Sample Pemakaian di Tangan`;
+      }
+      if (slideImg2) {
+        slideImg2.src = img2 || 'gelang_azure_real_kosmik_master.jpg';
+        slideImg2.alt = `${altPrefix} - Detail Real Kosmik`;
+      }
+      setStageSlide(0); // Reset ke foto pertama saat berganti varian
     }
 
     function selectVariant(v) {
       currentSelectedVariant = v;
       isMasterViewActive = false;
 
-      // Update active pill button
+      // Update selector buttons
       document.querySelectorAll('.variant-pill-btn').forEach((btn, idx) => {
-        btn.classList.toggle('active', celestialVariants[idx].id === v.id);
+        btn.classList.toggle('active', celestialVariants[idx] && celestialVariants[idx].id === v.id);
       });
 
-      // Update Stage Content with smooth fade
-      updateStageImage();
+      // Update 2-Photo Slider
+      const photo1 = v.imageHand || v.image;
+      const photo2 = v.image || v.imageHand;
+      updateStageSliderImages(photo1, photo2, v.name);
 
-      document.getElementById('stageSymbolBadge').textContent = v.symbol;
-      document.getElementById('stageProductTitle').textContent = v.name;
-      document.getElementById('stagePersonaTag').innerHTML = `Persona: <strong>${v.animeName || v.persona}</strong> · ${v.traits}`;
-      document.getElementById('stageQuoteBox').textContent = `"${v.quote}"`;
-      document.getElementById('specFlowerColor').textContent = v.flowerColor;
-      document.getElementById('specGemstone').textContent = v.gemstone;
-      document.getElementById('stagePriceVal').textContent = `Rp ${v.price.toLocaleString('id-ID')}`;
+      // Update Texts & Badges
+      const symBadge = document.getElementById('stageSymbolBadge');
+      if (symBadge) symBadge.textContent = v.symbol;
+      
+      const prodTitle = document.getElementById('stageProductTitle');
+      if (prodTitle) prodTitle.textContent = v.name;
+      
+      const personaTag = document.getElementById('stagePersonaTag');
+      if (personaTag) personaTag.innerHTML = `Filosofi: <strong>${v.persona}</strong> · ${v.traits}`;
+      
+      const quoteBox = document.getElementById('stageQuoteBox');
+      if (quoteBox) quoteBox.textContent = `"${v.quote}"`;
+      
+      // 4 Specs
+      const specFlower = document.getElementById('specFlowerColor');
+      if (specFlower) specFlower.textContent = v.flowerColor;
+      
+      const specGem = document.getElementById('specGemstone');
+      if (specGem) specGem.textContent = v.gemstone;
+      
+      const specWire = document.getElementById('specWireType');
+      if (specWire) specWire.textContent = v.wireType || 'Coiled Silver Wire + Lobster Clasp';
+      
+      const specPetal = document.getElementById('specPetalType');
+      if (specPetal) specPetal.textContent = v.petalType || 'Resin Transparan + Tepi Emas';
+      
+      // Pricing
+      const priceVal = document.getElementById('stagePriceVal');
+      if (priceVal) priceVal.textContent = `Rp ${Number(v.price).toLocaleString('id-ID')}`;
+      
+      const priceBadge = document.getElementById('stagePriceBadge');
+      if (priceBadge) priceBadge.textContent = v.priceBadge || 'Termasuk Fabric Pouch';
 
-      // Update WhatsApp Order Link
-      const waText = encodeURIComponent(`Halo Flowerjuicee! Saya ingin memesan Gelang The Celestial Blooms varian *${v.name}* (${v.flowerColor}) yang dipakai karakter *${v.animeName || v.persona}* seharga Rp ${v.price.toLocaleString('id-ID')}.`);
-      document.getElementById('stageDirectOrderBtn').href = `https://wa.me/6282258895545?text=${waText}`;
+      // Stock Status Handling
+      const stockBadge = document.getElementById('stageStockBadge');
+      const addBtn = document.getElementById('stageAddToCartBtn');
+      const waBtn = document.getElementById('stageDirectOrderBtn');
 
-      // Dynamic Background Transition!
+      if (stockBadge && addBtn) {
+        if (v.stock === 'sold_out') {
+          stockBadge.className = 'stage-stock-tag stock-soldout';
+          stockBadge.textContent = 'Sold Out';
+          addBtn.disabled = true;
+          addBtn.style.opacity = '0.5';
+          addBtn.style.cursor = 'not-allowed';
+          addBtn.textContent = '✕ Stok Habis';
+        } else if (v.stock === 'pre_order') {
+          stockBadge.className = 'stage-stock-tag stock-preorder';
+          stockBadge.textContent = 'Pre-Order';
+          addBtn.disabled = false;
+          addBtn.style.opacity = '1';
+          addBtn.style.cursor = 'pointer';
+          addBtn.textContent = '⏳ Pre-Order Sekarang';
+        } else {
+          stockBadge.className = 'stage-stock-tag stock-ready';
+          stockBadge.textContent = 'Ready Stock';
+          addBtn.disabled = false;
+          addBtn.style.opacity = '1';
+          addBtn.style.cursor = 'pointer';
+          addBtn.textContent = '🛒 Tambah ke Keranjang';
+        }
+      }
+
+      // WhatsApp Direct Link
+      if (waBtn) {
+        const cleanWa = storeConfig.waNumber.replace(/[^0-9]/g, '');
+        const waIntl = cleanWa.startsWith('0') ? '62' + cleanWa.slice(1) : cleanWa;
+        const tpl = storeConfig.waTemplate || "Halo Flowerjuicee! Saya ingin memesan Gelang The Celestial Blooms varian *{name}* ({flowerColor}) seharga Rp {price}.";
+        const waMsg = tpl
+          .replace('{name}', v.name)
+          .replace('{flowerColor}', v.flowerColor)
+          .replace('{price}', Number(v.price).toLocaleString('id-ID'));
+        waBtn.href = `https://wa.me/${waIntl}?text=${encodeURIComponent(waMsg)}`;
+      }
+
+      // Dynamic Background Transition
       const stageSection = document.getElementById('celestial-blooms');
-      stageSection.style.backgroundImage = v.bgGradient;
+      if (stageSection && v.bgGradient) {
+        stageSection.style.backgroundImage = v.bgGradient;
+      }
+
+      const toggleBtn = document.getElementById('toggleMasterViewBtn');
+      if (toggleBtn) toggleBtn.innerHTML = `<span>🌌 Formasi 7-in-1 Master</span>`;
+    }
+
+    function renderMasterStage() {
+      isMasterViewActive = true;
+      const mPhoto1 = masterFrameData.image || "seven_celestial_blooms_real_master.jpg";
+      const mPhoto2 = masterFrameData.imageHand || "seven_celestial_blooms_refined_masterpiece.jpg";
+      updateStageSliderImages(mPhoto1, mPhoto2, masterFrameData.name);
+
+      const symBadge = document.getElementById('stageSymbolBadge');
+      if (symBadge) symBadge.textContent = masterFrameData.symbol;
+
+      const prodTitle = document.getElementById('stageProductTitle');
+      if (prodTitle) prodTitle.textContent = masterFrameData.name;
+
+      const personaTag = document.getElementById('stagePersonaTag');
+      if (personaTag) personaTag.innerHTML = `Filosofi: <strong>${masterFrameData.persona}</strong> · ${masterFrameData.traits}`;
+
+      const quoteBox = document.getElementById('stageQuoteBox');
+      if (quoteBox) quoteBox.textContent = `"${masterFrameData.quote}"`;
+
+      const specFlower = document.getElementById('specFlowerColor');
+      if (specFlower) specFlower.textContent = masterFrameData.flowerColor;
+
+      const specGem = document.getElementById('specGemstone');
+      if (specGem) specGem.textContent = masterFrameData.gemstone;
+
+      const specWire = document.getElementById('specWireType');
+      if (specWire) specWire.textContent = masterFrameData.wireType;
+
+      const specPetal = document.getElementById('specPetalType');
+      if (specPetal) specPetal.textContent = masterFrameData.petalType;
+
+      const priceVal = document.getElementById('stagePriceVal');
+      if (priceVal) priceVal.textContent = `Rp ${Number(masterFrameData.price).toLocaleString('id-ID')}`;
+
+      const priceBadge = document.getElementById('stagePriceBadge');
+      if (priceBadge) priceBadge.textContent = masterFrameData.priceBadge;
+
+      const stockBadge = document.getElementById('stageStockBadge');
+      if (stockBadge) {
+        stockBadge.className = 'stage-stock-tag stock-ready';
+        stockBadge.textContent = 'Ready Stock';
+      }
+
+      const addBtn = document.getElementById('stageAddToCartBtn');
+      if (addBtn) {
+        addBtn.disabled = false;
+        addBtn.style.opacity = '1';
+        addBtn.style.cursor = 'pointer';
+        addBtn.textContent = '🛒 Tambah ke Keranjang';
+      }
+
+      const waBtn = document.getElementById('stageDirectOrderBtn');
+      if (waBtn) {
+        const cleanWa = storeConfig.waNumber.replace(/[^0-9]/g, '');
+        const waIntl = cleanWa.startsWith('0') ? '62' + cleanWa.slice(1) : cleanWa;
+        const waMsg = `Halo Flowerjuicee! Saya ingin memesan Paket Eksklusif *${masterFrameData.name}* seharga Rp ${Number(masterFrameData.price).toLocaleString('id-ID')}.`;
+        waBtn.href = `https://wa.me/${waIntl}?text=${encodeURIComponent(waMsg)}`;
+      }
+
+      const stageSection = document.getElementById('celestial-blooms');
+      if (stageSection) stageSection.style.backgroundImage = masterFrameData.bgGradient;
+
+      document.querySelectorAll('.variant-pill-btn').forEach(b => b.classList.remove('active'));
+      const toggleBtn = document.getElementById('toggleMasterViewBtn');
+      if (toggleBtn) toggleBtn.innerHTML = `<span>🔍 Kembali ke Varian Individual</span>`;
     }
 
     // Toggle 7-in-1 Master Formation View
-    document.getElementById('toggleMasterViewBtn').addEventListener('click', () => {
-      isMasterViewActive = !isMasterViewActive;
-      const mainImg = document.getElementById('stageMainImage');
-      mainImg.style.opacity = '0';
-
-      setTimeout(() => {
+    const toggleMasterBtn = document.getElementById('toggleMasterViewBtn');
+    if (toggleMasterBtn) {
+      toggleMasterBtn.addEventListener('click', () => {
         if (isMasterViewActive) {
-          mainImg.src = masterFrameData.image;
-          document.getElementById('stageSymbolBadge').textContent = masterFrameData.symbol;
-          document.getElementById('stageProductTitle').textContent = masterFrameData.name;
-          document.getElementById('stagePersonaTag').innerHTML = `Persona: <strong>${masterFrameData.persona}</strong> · ${masterFrameData.traits}`;
-          document.getElementById('stageQuoteBox').textContent = `"${masterFrameData.quote}"`;
-          document.getElementById('specFlowerColor').textContent = masterFrameData.flowerColor;
-          document.getElementById('specGemstone').textContent = masterFrameData.gemstone;
-          document.getElementById('stagePriceVal').textContent = `Rp ${masterFrameData.price.toLocaleString('id-ID')}`;
-          
-          document.getElementById('toggleMasterViewBtn').innerHTML = `<span>🔍 Kembali ke Varian Individual</span>`;
-          document.getElementById('celestial-blooms').style.backgroundImage = masterFrameData.bgGradient;
-          
-          document.querySelectorAll('.variant-pill-btn').forEach(b => b.classList.remove('active'));
-        } else {
           selectVariant(currentSelectedVariant);
-          document.getElementById('toggleMasterViewBtn').innerHTML = `<span>🌌 Formasi 7-in-1 Master</span>`;
+        } else {
+          renderMasterStage();
         }
-        mainImg.style.opacity = '1';
-      }, 200);
-    });
+      });
+    }
+
+    // Slider Controls (Arrow Buttons & Touch/Mouse Swipe)
+    const prevSlideBtn = document.getElementById('stageSlidePrevBtn');
+    if (prevSlideBtn) prevSlideBtn.addEventListener('click', prevStageSlide);
+
+    const nextSlideBtn = document.getElementById('stageSlideNextBtn');
+    if (nextSlideBtn) nextSlideBtn.addEventListener('click', nextStageSlide);
+
+    // Touch swipe and mouse drag gesture support
+    const stageMediaWrapEl = document.getElementById('stageMediaWrap');
+    if (stageMediaWrapEl) {
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      stageMediaWrapEl.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      stageMediaWrapEl.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (diff < -45) nextStageSlide();
+        else if (diff > 45) prevStageSlide();
+      }, { passive: true });
+
+      let isDragging = false;
+      let mouseStartX = 0;
+
+      stageMediaWrapEl.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button')) return;
+        isDragging = true;
+        mouseStartX = e.clientX;
+      });
+
+      window.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const diff = e.clientX - mouseStartX;
+        if (diff < -45) nextStageSlide();
+        else if (diff > 45) prevStageSlide();
+      });
+    }
 
     // Add to cart from stage
-    document.getElementById('stageAddToCartBtn').addEventListener('click', () => {
-      const itemToAdd = isMasterViewActive ? {
-        id: "prod-vault-stage",
-        name: masterFrameData.name,
-        price: masterFrameData.price,
-        image: masterFrameData.image
-      } : {
-        id: currentSelectedVariant.id,
-        name: `Gelang ${currentSelectedVariant.num}: ${currentSelectedVariant.name}`,
-        price: currentSelectedVariant.price,
-        image: currentSelectedVariant.image
-      };
+    const stageAddBtn = document.getElementById('stageAddToCartBtn');
+    if (stageAddBtn) {
+      stageAddBtn.addEventListener('click', () => {
+        const itemToAdd = isMasterViewActive ? {
+          id: "prod-vault-stage",
+          name: masterFrameData.name,
+          price: masterFrameData.price,
+          image: masterFrameData.image
+        } : {
+          id: currentSelectedVariant.id,
+          name: `Gelang ${currentSelectedVariant.num}: ${currentSelectedVariant.name}`,
+          price: currentSelectedVariant.price,
+          image: currentSelectedVariant.image
+        };
 
-      addToCart(itemToAdd);
-    });
+        if (!isMasterViewActive && currentSelectedVariant.stock === 'sold_out') {
+          alert("Maaf, varian ini saat ini sedang habis (Sold Out).");
+          return;
+        }
+
+        addToCart(itemToAdd);
+      });
+    }
 
     // --- 5. RENDER CATALOG PRODUCTS ---
     function renderCatalog(filter = 'all') {
       const grid = document.getElementById('productsGrid');
+      if (!grid) return;
       grid.innerHTML = "";
 
-      const filtered = catalogProducts.filter(p => {
+      const catalogItems = [
+        ...celestialVariants.map(v => ({
+          id: v.id,
+          name: v.name,
+          category: "celestial",
+          categoryLabel: "The Celestial Blooms",
+          persona: `Persona: ${v.persona}`,
+          price: v.price,
+          image: v.image,
+          badge: `Gelang ${v.num}`,
+          stock: v.stock
+        })),
+        {
+          id: "prod-vault",
+          name: "Lucky Seven Collector Vault (7 Gelang)",
+          category: "bundle",
+          categoryLabel: "Koleksi Lengkap",
+          persona: "Semua 7 Karakter + Kotak Beludru",
+          price: masterFrameData.price || 449000,
+          image: masterFrameData.image || "seven_celestial_blooms_real_master.jpg",
+          badge: "Special Collector",
+          stock: "ready"
+        },
+        {
+          id: "prod-sig-box",
+          name: "Signature Gift Box Set (1 Gelang Pilihan)",
+          category: "bundle",
+          categoryLabel: "Kado Spesial",
+          persona: "Hardbox Pita + Story Card + Mini Buket",
+          price: 99000,
+          image: "brand_card_flowerjuicee.jpg",
+          badge: "Best Seller Kado",
+          stock: "ready"
+        }
+      ];
+
+      const filtered = catalogItems.filter(p => {
         if (filter === 'all') return true;
         if (filter === 'celestial') return p.category === 'celestial';
         if (filter === 'bestseller') return p.id === 'var-3' || p.id === 'var-1' || p.id === 'prod-sig-box';
@@ -2359,6 +3441,16 @@
       });
 
       filtered.forEach(p => {
+        const isSoldOut = p.stock === 'sold_out';
+        const isPreOrder = p.stock === 'pre_order';
+        
+        let stockPillHtml = '';
+        if (isSoldOut) {
+          stockPillHtml = `<span class="stage-stock-tag stock-soldout" style="margin-left: 0; margin-top: 6px;">Sold Out</span>`;
+        } else if (isPreOrder) {
+          stockPillHtml = `<span class="stage-stock-tag stock-preorder" style="margin-left: 0; margin-top: 6px;">Pre-Order</span>`;
+        }
+
         const card = document.createElement('div');
         card.className = 'product-card';
         card.innerHTML = `
@@ -2371,12 +3463,15 @@
               <span class="card-category">${p.categoryLabel}</span>
               <h3 class="card-product-name">${p.name}</h3>
               <div class="card-persona">${p.persona}</div>
+              ${stockPillHtml}
             </div>
           </div>
           <div class="card-footer">
-            <span class="card-price">Rp ${p.price.toLocaleString('id-ID')}</span>
-            <button class="card-add-btn" title="Tambah ke Keranjang" onclick="addToCartById('${p.id}')">
-              +
+            <span class="card-price">Rp ${Number(p.price).toLocaleString('id-ID')}</span>
+            <button class="card-add-btn" title="${isSoldOut ? 'Stok Habis' : 'Tambah ke Keranjang'}" 
+                    style="${isSoldOut ? 'opacity: 0.4; cursor: not-allowed;' : ''}"
+                    onclick="handleCatalogAdd('${p.id}')">
+              ${isSoldOut ? '✕' : '+'}
             </button>
           </div>
         `;
@@ -2384,9 +3479,17 @@
       });
     }
 
-    // Filter Button Clicks
+    function handleCatalogAdd(id) {
+      const v = celestialVariants.find(item => item.id === id);
+      if (v && v.stock === 'sold_out') {
+        alert("Maaf, stok gelang ini sedang habis.");
+        return;
+      }
+      addToCartById(id);
+    }
+
     document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderCatalog(btn.getAttribute('data-filter'));
@@ -2394,7 +3497,14 @@
     });
 
     function addToCartById(id) {
-      const product = catalogProducts.find(p => p.id === id);
+      let product = celestialVariants.find(p => p.id === id);
+      if (!product) {
+        if (id === 'prod-vault') {
+          product = { id: 'prod-vault', name: "Lucky Seven Collector Vault", price: masterFrameData.price, image: masterFrameData.image };
+        } else if (id === 'prod-sig-box') {
+          product = { id: 'prod-sig-box', name: "Signature Gift Box Set", price: 99000, image: "brand_card_flowerjuicee.jpg" };
+        }
+      }
       if (product) addToCart(product);
     }
 
@@ -2436,12 +3546,13 @@
     }
 
     function updateCartUI() {
-      // Badge count
       const totalCount = cart.reduce((acc, i) => acc + i.qty, 0);
-      document.getElementById('cartCountBadge').textContent = totalCount;
+      const countBadge = document.getElementById('cartCountBadge');
+      if (countBadge) countBadge.textContent = totalCount;
 
-      // Items list
       const listContainer = document.getElementById('cartItemsList');
+      if (!listContainer) return;
+
       if (cart.length === 0) {
         listContainer.innerHTML = `
           <div class="empty-cart-msg">
@@ -2467,7 +3578,7 @@
           <img class="cart-item-thumb" src="${item.image}" alt="${item.name}">
           <div class="cart-item-details">
             <div class="cart-item-name">${item.name}</div>
-            <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')}</div>
+            <div class="cart-item-price">Rp ${Number(item.price).toLocaleString('id-ID')}</div>
             <div class="cart-qty-ctrl">
               <button class="qty-btn" onclick="changeQty('${item.id}', -1)">-</button>
               <span class="qty-val">${item.qty}</span>
@@ -2479,25 +3590,31 @@
         listContainer.appendChild(row);
       });
 
-      document.getElementById('cartTotalPrice').textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
+      const totalEl = document.getElementById('cartTotalPrice');
+      if (totalEl) totalEl.textContent = `Rp ${grandTotal.toLocaleString('id-ID')}`;
     }
 
-    // Cart Drawer Toggle
     const cartOverlay = document.getElementById('cartOverlay');
     const cartDrawer = document.getElementById('cartDrawer');
     function openCartDrawer() {
-      cartOverlay.classList.add('active');
-      cartDrawer.classList.add('active');
+      if (cartOverlay && cartDrawer) {
+        cartOverlay.classList.add('active');
+        cartDrawer.classList.add('active');
+      }
     }
     function closeCartDrawer() {
-      cartOverlay.classList.remove('active');
-      cartDrawer.classList.remove('active');
+      if (cartOverlay && cartDrawer) {
+        cartOverlay.classList.remove('active');
+        cartDrawer.classList.remove('active');
+      }
     }
-    document.getElementById('openCartBtn').addEventListener('click', openCartDrawer);
-    document.getElementById('closeCartBtn').addEventListener('click', closeCartDrawer);
-    cartOverlay.addEventListener('click', closeCartDrawer);
+    const openCartBtn = document.getElementById('openCartBtn');
+    if (openCartBtn) openCartBtn.addEventListener('click', openCartDrawer);
+    const closeCartBtn = document.getElementById('closeCartBtn');
+    if (closeCartBtn) closeCartBtn.addEventListener('click', closeCartDrawer);
+    if (cartOverlay) cartOverlay.addEventListener('click', closeCartDrawer);
 
-    // --- 7. WHATSAPP CHECKOUT GENERATOR ---
+    // WhatsApp Checkout
     function submitWhatsAppOrder() {
       if (cart.length === 0) {
         alert("Keranjang masih kosong!");
@@ -2532,94 +3649,437 @@
       if (note) msg += `• Catatan Kartu Ucapan: "${note}"\n`;
       msg += `\nMohon informasi ketersediaan dan ongkos kirim ya min. Terima kasih! ✨`;
 
-      const waUrl = `https://wa.me/6282258895545?text=${encodeURIComponent(msg)}`;
+      const cleanWa = storeConfig.waNumber.replace(/[^0-9]/g, '');
+      const waIntl = cleanWa.startsWith('0') ? '62' + cleanWa.slice(1) : cleanWa;
+      const waUrl = `https://wa.me/${waIntl}?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, '_blank');
     }
 
-    // --- 8. TOAST SYSTEM ---
     function showToast(msg) {
       const toast = document.getElementById('toastMsg');
-      document.getElementById('toastText').textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 2500);
+      const textEl = document.getElementById('toastText');
+      if (toast && textEl) {
+        textEl.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2500);
+      }
     }
 
-    // --- 9. ANIME PERSONAS SHOWCASE GRID ---
-    function initAnimePersonasGrid() {
-      const grid = document.getElementById('animeCardsGrid');
-      if (!grid) return;
-      grid.innerHTML = "";
+    // --- 7. SECRET EASTER EGG & ADMIN AUTH SYSTEM ---
+    let logoClicks = 0;
+    let logoTimer = null;
+    const brandLogoEl = document.getElementById('siteBrandLogo') || document.querySelector('.brand-logo-wrap');
 
-      celestialVariants.forEach(v => {
-        const card = document.createElement('div');
-        card.className = 'anime-card';
-        const traitsList = v.traits.split(',').map(t => `<span class="anime-trait-tag">${t.trim()}</span>`).join('');
-        const waOrderText = encodeURIComponent(`Halo Flowerjuicee! Saya ingin memesan Gelang The Celestial Blooms Varian ${v.num}: *${v.name}* (${v.flowerColor}) yang dipakai karakter anime *${v.animeName || v.persona}* seharga Rp ${v.price.toLocaleString('id-ID')}.`);
+    if (brandLogoEl) {
+      brandLogoEl.addEventListener('click', (e) => {
+        logoClicks++;
+        clearTimeout(logoTimer);
 
-        card.innerHTML = `
-          <div class="anime-card-media">
-            <img class="anime-card-img" src="${v.animeImage}" alt="${v.animeName} memakai gelang ${v.name}" loading="lazy">
-            <span class="anime-badge-num">Gelang ${v.num} · ${v.symbol.split('(')[0].trim()}</span>
-            <span class="anime-gem-pill">
-              <span class="pill-gem-dot" style="color: ${v.gemColor};"></span>
-              ${v.gemstone}
-            </span>
-          </div>
-          <div class="anime-card-body">
-            <div>
-              <div class="anime-persona-title">
-                <span>${v.animeName}</span>
-                <span style="font-size: 0.85rem; color: var(--choc-main); font-weight: 600;">${v.flowerColor}</span>
-              </div>
-              <span class="anime-bracelet-name">Gelang ${v.name}</span>
-              
-              <div class="anime-traits-tagwrap">
-                ${traitsList}
-              </div>
-
-              <div class="anime-quote-box">
-                "${v.quote}"
-              </div>
-            </div>
-
-            <div class="anime-card-actions">
-              <button class="btn-anime-stage" onclick="inspectPersonaOnStage('${v.id}')">
-                ✦ Lihat di Stage
-              </button>
-              <a class="btn-anime-order" href="https://wa.me/6282258895545?text=${waOrderText}" target="_blank">
-                💬 Pesan WA
-              </a>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
+        if (logoClicks >= 3) {
+          e.preventDefault();
+          logoClicks = 0;
+          if (sessionStorage.getItem('flowerjuicee_admin_session') === 'active') {
+            openAdminDrawer();
+          } else {
+            openPinModal();
+          }
+        } else {
+          logoTimer = setTimeout(() => {
+            logoClicks = 0;
+          }, 1200);
+        }
       });
     }
 
-    function inspectPersonaOnStage(varId) {
-      const v = celestialVariants.find(item => item.id === varId);
-      if (!v) return;
-      stageVisualMode = 'anime';
-      const btnAnime = document.getElementById('modeAnimeBtn');
-      const btnCosmic = document.getElementById('modeCosmicBtn');
-      if (btnAnime && btnCosmic) {
-        btnAnime.classList.add('active');
-        btnCosmic.classList.remove('active');
+    // PIN Modal Logic
+    const pinBackdrop = document.getElementById('adminPinBackdrop');
+    const pinInput = document.getElementById('adminPinInput');
+    const pinErrorMsg = document.getElementById('pinErrorMsg');
+    let failedPinAttempts = 0;
+    let pinLockoutUntil = 0;
+
+    function openPinModal() {
+      if (!pinBackdrop || !pinInput) return;
+      pinBackdrop.classList.add('active');
+      pinInput.value = "";
+      if (pinErrorMsg) pinErrorMsg.textContent = "";
+      setTimeout(() => pinInput.focus(), 250);
+    }
+
+    function closePinModal() {
+      if (pinBackdrop) pinBackdrop.classList.remove('active');
+    }
+
+    const closePinBtn = document.getElementById('closePinModalBtn');
+    if (closePinBtn) closePinBtn.addEventListener('click', closePinModal);
+    if (pinBackdrop) {
+      pinBackdrop.addEventListener('click', (e) => {
+        if (e.target === pinBackdrop) closePinModal();
+      });
+    }
+
+    async function verifyAdminPin() {
+      const now = Date.now();
+      if (pinLockoutUntil > now) {
+        const remaining = Math.ceil((pinLockoutUntil - now) / 1000);
+        if (pinErrorMsg) pinErrorMsg.textContent = `Akses terkunci! Tunggu ${remaining} detik lagi.`;
+        return;
       }
-      selectVariant(v);
-      const stageElem = document.getElementById('celestial-blooms');
-      if (stageElem) {
-        stageElem.scrollIntoView({ behavior: 'smooth' });
+
+      if (!pinInput) return;
+      const inputVal = pinInput.value.trim();
+      if (!inputVal) return;
+
+      const inputHash = await sha256(inputVal);
+      const targetHash = storeConfig.pinHash || "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+
+      if (inputHash === targetHash) {
+        sessionStorage.setItem('flowerjuicee_admin_session', 'active');
+        failedPinAttempts = 0;
+        closePinModal();
+        showToast("🌸 Akses Diterima! Selamat Datang di Mode Admin.");
+        openAdminDrawer();
+      } else {
+        failedPinAttempts++;
+        const modal = document.querySelector('.admin-pin-modal');
+        if (modal) {
+          modal.classList.add('shake');
+          setTimeout(() => modal.classList.remove('shake'), 450);
+        }
+
+        if (failedPinAttempts >= 5) {
+          pinLockoutUntil = Date.now() + 30000;
+          if (pinErrorMsg) pinErrorMsg.textContent = "Terlalu banyak percobaan salah! Terkunci 30 detik.";
+        } else {
+          if (pinErrorMsg) pinErrorMsg.textContent = `PIN salah! Sisa percobaan: ${5 - failedPinAttempts}`;
+        }
+        pinInput.value = "";
+        pinInput.focus();
       }
     }
 
-    // Run on startup
+    // --- 8. ADMIN DRAWER MANAGEMENT ---
+    const adminDrawerBackdrop = document.getElementById('adminDrawerBackdrop');
+    
+    function openAdminDrawer() {
+      populateProductPicker();
+      loadProductToAdminForm(currentlyEditingProductId);
+      loadHeroAndSettingsToAdminForm();
+      if (adminDrawerBackdrop) adminDrawerBackdrop.classList.add('active');
+    }
+
+    function closeAdminDrawer() {
+      if (adminDrawerBackdrop) adminDrawerBackdrop.classList.remove('active');
+    }
+
+    const closeAdmBtn = document.getElementById('closeAdminDrawerBtn');
+    if (closeAdmBtn) closeAdmBtn.addEventListener('click', closeAdminDrawer);
+    const cancelAdmBtn = document.getElementById('cancelAdminDrawerBtn');
+    if (cancelAdmBtn) cancelAdmBtn.addEventListener('click', closeAdminDrawer);
+    if (adminDrawerBackdrop) {
+      adminDrawerBackdrop.addEventListener('click', (e) => {
+        if (e.target === adminDrawerBackdrop) closeAdminDrawer();
+      });
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('flowerjuicee_admin_session');
+      closeAdminDrawer();
+      showToast("🔒 Sesi admin telah dikunci.");
+    }
+
+    // Tab Navigation
+    function switchAdminTab(tabId) {
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+      });
+      document.querySelectorAll('.admin-tab-content').forEach(content => {
+        content.classList.toggle('active', content.id === tabId);
+      });
+    }
+
+    // Populate Product Picker
+    function populateProductPicker() {
+      const select = document.getElementById('admProductPicker');
+      if (!select) return;
+      select.innerHTML = "";
+
+      celestialVariants.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.id;
+        opt.textContent = `Gelang ${v.num}: ${v.name} (${v.flowerColor})`;
+        if (v.id === currentlyEditingProductId) opt.selected = true;
+        select.appendChild(opt);
+      });
+
+      const optMaster = document.createElement('option');
+      optMaster.value = masterFrameData.id || "master-frame";
+      optMaster.textContent = `👑 ${masterFrameData.name}`;
+      if (masterFrameData.id === currentlyEditingProductId) optMaster.selected = true;
+      select.appendChild(optMaster);
+    }
+
+    // Sync current product form values into memory
+    function syncCurrentAdminFormToMemory() {
+      if (!currentlyEditingProductId) return;
+      let p = celestialVariants.find(v => v.id === currentlyEditingProductId);
+      const isMaster = (currentlyEditingProductId === 'master-frame' || currentlyEditingProductId === masterFrameData.id);
+      if (isMaster) p = masterFrameData;
+
+      if (p) {
+        const getVal = id => {
+          const el = document.getElementById(id);
+          return el ? el.value.trim() : "";
+        };
+
+        const name = getVal('admName');
+        if (name) p.name = name;
+        p.symbol = getVal('admSymbol') || p.symbol;
+        p.persona = getVal('admPersona') || p.persona;
+        p.traits = getVal('admTraits') || p.traits;
+        p.quote = getVal('admQuote') || p.quote;
+
+        p.flowerColor = getVal('admFlowerColor') || p.flowerColor;
+        p.gemstone = getVal('admGemstone') || p.gemstone;
+        p.wireType = getVal('admWireType') || p.wireType;
+        p.petalType = getVal('admPetalType') || p.petalType;
+
+        const priceVal = parseInt(getVal('admPrice'), 10);
+        if (!isNaN(priceVal)) p.price = priceVal;
+
+        p.priceBadge = getVal('admPriceBadge') || p.priceBadge;
+        const stockEl = document.getElementById('admStock');
+        if (stockEl) p.stock = stockEl.value;
+
+        const imgHandVal = getVal('admImgHand');
+        if (imgHandVal) p.imageHand = imgHandVal;
+
+        const imgMasterVal = getVal('admImgMaster');
+        if (imgMasterVal) p.image = imgMasterVal;
+      }
+    }
+
+    // Load Product to Tab 1 Form
+    function loadProductToAdminForm(productId) {
+      if (currentlyEditingProductId && currentlyEditingProductId !== productId) {
+        syncCurrentAdminFormToMemory();
+      }
+      currentlyEditingProductId = productId;
+      let p = celestialVariants.find(v => v.id === productId);
+      if (!p && (productId === 'master-frame' || productId === masterFrameData.id)) {
+        p = masterFrameData;
+      }
+      if (!p) return;
+
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      };
+
+      setVal('admName', p.name || "");
+      setVal('admSymbol', p.symbol || "");
+      setVal('admPersona', p.persona || "");
+      setVal('admTraits', p.traits || "");
+      setVal('admQuote', p.quote || "");
+      
+      setVal('admFlowerColor', p.flowerColor || "");
+      setVal('admGemstone', p.gemstone || "");
+      setVal('admWireType', p.wireType || "Coiled Silver Wire + Lobster Clasp");
+      setVal('admPetalType', p.petalType || "Resin Transparan + Tepi Emas");
+
+      setVal('admPrice', p.price || 59000);
+      setVal('admPriceBadge', p.priceBadge || "Termasuk Fabric Pouch");
+      setVal('admStock', p.stock || "ready");
+
+      setVal('admImgHand', p.imageHand || "");
+      setVal('admImgMaster', p.image || "");
+
+      // Render Visual Image Choice Cards
+      renderAdminImageChoices(p);
+    }
+
+    function swapAdminSlidePhotos() {
+      const inputHand = document.getElementById('admImgHand');
+      const inputMaster = document.getElementById('admImgMaster');
+      if (inputHand && inputMaster) {
+        const temp = inputHand.value;
+        inputHand.value = inputMaster.value;
+        inputMaster.value = temp;
+
+        let p = celestialVariants.find(v => v.id === currentlyEditingProductId);
+        if (!p && (currentlyEditingProductId === 'master-frame' || currentlyEditingProductId === masterFrameData.id)) {
+          p = masterFrameData;
+        }
+        if (p) {
+          p.imageHand = inputHand.value;
+          p.image = inputMaster.value;
+          renderAdminImageChoices(p);
+        }
+        showToast("⇄ Posisi Foto 1 dan Foto 2 berhasil ditukar!");
+      }
+    }
+
+    function renderAdminImageChoices(p) {
+      const group = document.getElementById('admImgOptionsGroup');
+      if (!group) return;
+      group.innerHTML = "";
+
+      const slides = [
+        { label: "Slide 1: Di Tangan", src: p.imageHand || "gelang_hand_cream_1_azure.jpg" },
+        { label: "Slide 2: Detail Real Kosmik", src: p.image || "gelang_azure_real_kosmik_master.jpg" }
+      ];
+
+      slides.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "adm-img-card selected";
+        card.innerHTML = `
+          <img class="adm-img-preview" src="${item.src}" alt="${item.label}">
+          <span class="adm-img-label">${item.label}</span>
+        `;
+        group.appendChild(card);
+      });
+    }
+
+    // Load Tab 2, 3, 4 Settings
+    function loadHeroAndSettingsToAdminForm() {
+      const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val;
+      };
+
+      setVal('admHeroTitle', storeConfig.heroTitle || "");
+      setVal('admHeroDesc', storeConfig.heroDesc || "");
+      setVal('admWaNumber', storeConfig.waNumber || "082258895545");
+      setVal('admWaTemplate', storeConfig.waTemplate || "");
+      setVal('admInstagram', storeConfig.instagram || "@fflowerjuicee");
+      setVal('admTiktok', storeConfig.tiktok || "flowerjuicee");
+    }
+
+    // Save Admin Changes
+    function saveAdminChanges() {
+      // 1. Sync Active Product Form (Tab 1)
+      syncCurrentAdminFormToMemory();
+
+      // 2. Save Tab 2 (Hero)
+      const heroTitleVal = document.getElementById('admHeroTitle').value.trim();
+      if (heroTitleVal) storeConfig.heroTitle = heroTitleVal;
+      
+      const heroDescVal = document.getElementById('admHeroDesc').value.trim();
+      if (heroDescVal) storeConfig.heroDesc = heroDescVal;
+
+      // 3. Save Tab 3 (WhatsApp & Socials)
+      const waVal = document.getElementById('admWaNumber').value.trim();
+      if (waVal) storeConfig.waNumber = waVal;
+
+      const waTplVal = document.getElementById('admWaTemplate').value.trim();
+      if (waTplVal) storeConfig.waTemplate = waTplVal;
+
+      const igVal = document.getElementById('admInstagram').value.trim();
+      if (igVal) storeConfig.instagram = igVal;
+
+      const ttVal = document.getElementById('admTiktok').value.trim();
+      if (ttVal) storeConfig.tiktok = ttVal;
+
+      // 4. Persist to localStorage
+      saveStoreConfig();
+
+      // 5. Instantly apply changes to DOM!
+      applyStoreConfig();
+
+      showToast("✓ Pengaturan toko berhasil disimpan & diterapkan!");
+    }
+
+    // Change Admin PIN
+    async function changeAdminPin() {
+      const p1 = document.getElementById('admNewPin').value.trim();
+      const p2 = document.getElementById('admConfirmPin').value.trim();
+
+      if (!p1 || p1.length < 4) {
+        alert("PIN baru harus minimal 4 digit angka!");
+        return;
+      }
+      if (p1 !== p2) {
+        alert("Konfirmasi PIN baru tidak cocok!");
+        return;
+      }
+
+      const hash = await sha256(p1);
+      storeConfig.pinHash = hash;
+      saveStoreConfig();
+
+      document.getElementById('admNewPin').value = "";
+      document.getElementById('admConfirmPin').value = "";
+      showToast("✓ PIN Keamanan admin berhasil diperbarui!");
+    }
+
+    // Export Store Config to JSON
+    function exportStoreConfig() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storeConfig, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `flowerjuicee_backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("📥 File cadangan JSON berhasil diunduh!");
+    }
+
+    // Import Store Config from JSON
+    const importInput = document.getElementById('admImportFileInput');
+    if (importInput) {
+      importInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          try {
+            const imported = JSON.parse(event.target.result);
+            if (imported && (imported.variants || imported.heroTitle)) {
+              storeConfig = { ...DEFAULT_STORE_CONFIG, ...imported };
+              saveStoreConfig();
+              applyStoreConfig();
+              populateProductPicker();
+              loadProductToAdminForm(currentlyEditingProductId);
+              loadHeroAndSettingsToAdminForm();
+              showToast("📤 Data toko berhasil dipulihkan dari file JSON!");
+            } else {
+              alert("Format file cadangan tidak valid.");
+            }
+          } catch (err) {
+            alert("Gagal membaca file JSON: " + err.message);
+          }
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    // Reset Store Config
+    function resetStoreConfigToDefault() {
+      if (confirm("Apakah Anda yakin ingin mengembalikan SEMUA pengaturan toko (produk, harga, jargon, dan PIN) ke default pabrik?")) {
+        storeConfig = JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG));
+        saveStoreConfig();
+        applyStoreConfig();
+        populateProductPicker();
+        loadProductToAdminForm(currentlyEditingProductId);
+        loadHeroAndSettingsToAdminForm();
+        showToast("⚠️ Pengaturan toko telah direset ke default pabrik.");
+      }
+    }
+
+    // Keyboard Shortcut (ESC to close Admin Modal & Drawer)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePinModal();
+        closeAdminDrawer();
+      }
+    });
+
+    // Startup Initialization
     window.addEventListener('DOMContentLoaded', () => {
-      initCelestialSelector();
-      initAnimePersonasGrid();
-      renderCatalog();
+      applyStoreConfig();
       updateCartUI();
     });
   </script>
