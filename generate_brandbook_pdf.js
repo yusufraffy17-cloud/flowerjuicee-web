@@ -1,0 +1,885 @@
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const htmlContent = `<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Flowerjuicee · The Celestial Blooms Brand Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 10mm 12mm 12mm 12mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #2b2633;
+      background-color: #faf8f5;
+      font-size: 9.5pt;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      page-break-after: always;
+      position: relative;
+      padding-bottom: 20px;
+    }
+    .page:last-child {
+      page-break-after: auto;
+    }
+    
+    /* Headers & Typography */
+    h1, h2, h3, h4 {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.5px;
+    }
+    .serif-title {
+      font-family: 'Playfair Display', serif;
+    }
+    .gold-accent {
+      color: #b38728;
+    }
+    .gold-gradient {
+      background: linear-gradient(135deg, #b8860b 0%, #e6ca65 50%, #996515 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    /* Cover Page */
+    .cover-container {
+      background: radial-gradient(circle at 50% 20%, #201a35 0%, #0d0a17 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 35px 30px;
+      text-align: center;
+      min-height: 980px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    .cover-header {
+      text-transform: uppercase;
+      font-size: 11pt;
+      letter-spacing: 4px;
+      color: #d4af37;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+    }
+    .cover-title {
+      font-size: 28pt;
+      font-weight: 700;
+      color: #f7eed3;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .cover-subtitle {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 14pt;
+      color: #c9bfdb;
+      margin-bottom: 20px;
+    }
+    .cover-hero-img {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 2px solid rgba(212, 175, 55, 0.4);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+      margin: 10px 0;
+    }
+    .cover-footer {
+      border-top: 1px solid rgba(212, 175, 55, 0.3);
+      padding-top: 16px;
+      font-size: 9pt;
+      color: #a59cb8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* General Page Layout */
+    .section-header {
+      border-bottom: 2px solid #e2d7c5;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .section-title {
+      font-size: 15pt;
+      color: #1a162b;
+      font-weight: 700;
+    }
+    .section-badge {
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #b38728;
+      font-weight: 600;
+    }
+    
+    /* Two Column & Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    /* Cards */
+    .card {
+      background: #ffffff;
+      border: 1px solid #e8e2d8;
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      break-inside: avoid;
+    }
+    .card-dark {
+      background: #1b1629;
+      color: #fff;
+      border: 1px solid #3c3254;
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .card-title {
+      font-size: 11pt;
+      font-weight: 700;
+      color: #1a162b;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title-gold {
+      color: #d4af37;
+      font-size: 11pt;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    
+    /* Product Spotlight Cards */
+    .product-spotlight {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 16px;
+      background: #ffffff;
+      border: 1px solid #e5dcce;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 14px;
+      break-inside: avoid;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+    .spotlight-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .spotlight-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+    .spotlight-info h3 {
+      font-size: 13pt;
+      color: #181324;
+      margin-bottom: 4px;
+    }
+    .spotlight-tag {
+      display: inline-block;
+      font-size: 7.5pt;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: #f4ecdc;
+      color: #8c6514;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .quote-box {
+      background: #fbf9f5;
+      border-left: 3px solid #b38728;
+      padding: 8px 12px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 9.5pt;
+      color: #4a3e56;
+      margin: 8px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    
+    /* Table Styling */
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #e0d8cc;
+      margin-bottom: 16px;
+    }
+    table.custom-table th {
+      background: #201a35;
+      color: #f7eed3;
+      font-family: 'Cinzel', serif;
+      font-size: 8.5pt;
+      font-weight: 600;
+      padding: 9px 10px;
+      text-align: left;
+    }
+    table.custom-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #eee8df;
+      vertical-align: middle;
+    }
+    table.custom-table tr:last-child td {
+      border-bottom: none;
+    }
+    table.custom-table tr:nth-child(even) {
+      background: #fbf9f6;
+    }
+    
+    /* Message Cards Ready to Print */
+    .printable-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .print-card {
+      background: #fff;
+      border: 1px dashed #b8860b;
+      border-radius: 6px;
+      padding: 12px;
+      position: relative;
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      break-inside: avoid;
+    }
+    .print-card-header {
+      text-align: center;
+      border-bottom: 1px solid #f0e6d6;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
+    }
+    .print-card-header .title {
+      font-family: 'Cinzel', serif;
+      font-size: 10pt;
+      font-weight: 700;
+      color: #1a162b;
+    }
+    .print-card-header .subtitle {
+      font-size: 7pt;
+      color: #8c7f9d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .print-card-body {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 8.5pt;
+      color: #3b3247;
+      text-align: center;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .print-card-footer {
+      border-top: 1px solid #f0e6d6;
+      padding-top: 6px;
+      font-size: 7.5pt;
+      color: #716782;
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    /* Badges & Meta */
+    .pill {
+      display: inline-block;
+      font-size: 7pt;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: #e9e4f0;
+      color: #4b3d63;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HALAMAN 1: COVER ==================== -->
+  <div class="page">
+    <div class="cover-container">
+      <div>
+        <div class="cover-header">Flowerjuicee · Handmade Jewelry Brand Book</div>
+        <div class="cover-title">THE CELESTIAL BLOOMS</div>
+        <div class="cover-subtitle">"Bunga Abadi di Bawah Sinar Rembulan dan Bintang"</div>
+      </div>
+
+      <div>
+        <img class="cover-hero-img" src="celestial_bracelets_real_1791475234268.jpg" alt="The Celestial Blooms Collection">
+      </div>
+
+      <div class="cover-footer">
+        <div>Koleksi Eksklusif & Panduan Strategi Bisnis</div>
+        <div>Karakteristik · Seni Anime · Copywriting · Strategi Harga</div>
+        <div>Tahun 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 2: EXECUTIVE SUMMARY & MARKET PSYCHOLOGY ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">01. EXECUTIVE SUMMARY & STRATEGI PASAR</div>
+      <div class="section-badge">Brand Blueprint</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🌸 DNA Produk Flowerjuicee</div>
+        <p style="margin-bottom: 8px;">Koleksi <b>Flowerjuicee</b> merupakan gelang kawat lilit halus buatan tangan (*wire-wrap handcrafted*) dengan ornamen kelopak bunga resin transparan bertepi daun emas (*gilded gold rims*), manik kristal faset, daun hijau mungil, dan rantai pengait *lobster clasp* yang elegan.</p>
+        <p>Tantangan utama produk kerajinan tangan adalah seringkali dianggap sekadar "manik-manik murah" jika dijual tanpa narasi. Dengan menghadirkan konsep <b>The Celestial Collection</b>, setiap warna kini merepresentasikan kosmik (Bintang, Surya, Bulan, Komet, dan Galaksi) yang mengangkat nilai estetikanya ke level perhiasan semi-fine jewelry.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎯 Psikologi Target Konsumen</div>
+        <p style="margin-bottom: 6px;"><b>1. Target Pria (Pembeli Kado Romantis — High Conversion)</b></p>
+        <p style="font-size: 9pt; margin-bottom: 10px; color: #555;">Pria sering bingung saat memilih aksesoris karena takut salah model atau ukuran. Dengan mengelompokkan gelang berdasarkan <i>karakter pacarnya</i>, pria dapat dengan bangga dan percaya diri memilih kado yang memiliki pesan mendalam.</p>
+        <p style="margin-bottom: 6px;"><b>2. Target Wanita (Self-Reward & Aesthetic Enthusiast)</b></p>
+        <p style="font-size: 9pt; color: #555;">Wanita sangat menyukai aksesoris yang merefleksikan identitas diri (<i>"Ini sesuai kepribadianku!"</i>), tema astrologi/bintang, dan gaya *coquette/fairytale aesthetic* yang mempercantik OOTD harian.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 16px;">
+      <div style="display: grid; grid-template-columns: 240px 1fr; gap: 16px; align-items: center;">
+        <img src="celestial_wrist_closeup_1791475267920.jpg" style="width: 100%; height: 210px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;" alt="Wrist Close-up">
+        <div>
+          <h3 style="font-size: 12pt; color: #181324; margin-bottom: 6px;">Kunci Melipatgandakan Nilai Jual (Perceived Value)</h3>
+          <ul style="padding-left: 18px; font-size: 9pt; color: #444; line-height: 1.6;">
+            <li><b>Emotional Gifting:</b> Pelanggan tidak sekadar membeli gelang kawat, melainkan membeli "ungkapan perasaan cinta" dan "penghargaan kepribadian".</li>
+            <li><b>Unboxing Experience Mewah:</b> Menggunakan bantalan beludru, amplop segel lilin emas (*wax seal*), dan kartu ucapan puitis menaikkan harga jual dari Rp 35.000 menjadi Rp 89.000 - Rp 119.000.</li>
+            <li><b>Collectible Anime Art Card:</b> Setiap pesanan disertai photocard karakter anime estetik yang dapat disimpan atau dipajang oleh penerima kado.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-dark">
+      <div class="card-title-gold">✨ Ringkasan 5 Pilar Semesta Flowerjuicee</div>
+      <p style="font-size: 8.5pt; color: #d0c8e2; line-height: 1.5;">
+        <b>Stella Maris (Biru)</b>: Bintang Kejora Kedamaian · 
+        <b>Solar Solstice (Madu)</b>: Surya Senja Kehangatan · 
+        <b>Luna Crescent (Pink)</b>: Bulan Sabit Cinta Pertama · 
+        <b>Cosmic Nova (Magenta)</b>: Komet Tawa & Sukacita · 
+        <b>Midnight Galaxy (Ungu)</b>: Bulan Purnama & Takdir Semesta.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 3: OVERVIEW 5 VARIAN ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">02. OVERVIEW 5 VARIAN KOSMIK & KARAKTER ANIME</div>
+      <div class="section-badge">Product Matrix</div>
+    </div>
+
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Varian & Warna</th>
+          <th>Simbol Kosmik</th>
+          <th>Karakter Anime</th>
+          <th>Karakteristik & Pesan Romantis</th>
+          <th>Target Pasangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Stella Maris</b><br><span style="color:#2b6cb0;">Sky Azure Blue</span></td>
+          <td>Bintang Kejora & Langit Fajar</td>
+          <td><b>Aoi (碧)</b><br><i>The Ocean Seraph</i></td>
+          <td>Ketenangan batin, kesetiaan abadi, pendengar yang baik, dan tempat pulang paling damai.</td>
+          <td>Pacar yang dewasa, tenang, setia & penyabar.</td>
+        </tr>
+        <tr>
+          <td><b>Solar Solstice</b><br><span style="color:#b7791f;">Honey Amber Peach</span></td>
+          <td>Surya Senja & Cahaya Madu</td>
+          <td><b>Kohaku (琥珀)</b><br><i>The Sunlit Muse</i></td>
+          <td>Kehangatan hati, senyum yang melelehkan lelah, penuh perhatian, dan keanggunan bersahaja.</td>
+          <td>Pacar yang hangat, keibuan & penuh perhatian.</td>
+        </tr>
+        <tr>
+          <td><b>Luna Crescent</b><br><span style="color:#d53f8c;">Sakura Blush Pink</span></td>
+          <td>Bulan Sabit & Debu Sakura</td>
+          <td><b>Sakurako (桜子)</b><br><i>First Love Petal</i></td>
+          <td>Kepolosan cinta pertama, manis, feminin, pemalu, dan selalu membuat hati berdebar.</td>
+          <td>Pacar yang manis, imut, pemalu & romantis.</td>
+        </tr>
+        <tr>
+          <td><b>Cosmic Nova</b><br><span style="color:#b83280;">Vivid Magenta Fuchsia</span></td>
+          <td>Komet Jatuh & Nebula Mawar</td>
+          <td><b>Rion (莉音)</b><br><i>The Fireworks Spark</i></td>
+          <td>Penuh tawa, energik, berani, percaya diri, dan selalu mewarnai hari yang suram.</td>
+          <td>Pacar yang ceria, humoris, aktif & percaya diri.</td>
+        </tr>
+        <tr>
+          <td><b>Midnight Galaxy</b><br><span style="color:#6b46c1;">Twilight Violet Purple</span></td>
+          <td>Bulan Purnama & Rasi Bintang</td>
+          <td><b>Shion (紫苑)</b><br><i>Moonlit Enchantress</i></td>
+          <td>Anggun, misterius, berkelas, unik, dan pesonanya ditakdirkan oleh semesta.</td>
+          <td>Pacar yang elegan, mandiri, estetik & memikat.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align: center; margin: 15px 0;">
+      <img src="celestial_flower_bracelets_1791475085377.jpg" style="width: 100%; height: 260px; object-fit: cover; border-radius: 8px; border: 1px solid #d4af37;" alt="Celestial Showcase Art">
+      <div style="font-size: 8pt; color: #777; margin-top: 6px; font-style: italic;">
+        Konsep Altar Kosmik: Masing-masing varian memancarkan aura langit unik yang saling melengkapi.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💡 Ide Bundling Khusus: "Celestial Pairings"</div>
+      <div class="grid-2" style="margin-bottom: 0;">
+        <div style="font-size: 9pt;">
+          <b>1. The Sun & The Moon (Solar Solstice + Luna Crescent)</b><br>
+          Paket favorit untuk pasangan atau sahabat: perpaduan kehangatan matahari madu dan kelembutan bulan sabit merah muda.
+        </div>
+        <div style="font-size: 9pt;">
+          <b>2. The Star & The Galaxy (Stella Maris + Midnight Galaxy)</b><br>
+          Paket mistis dan elegan: bintang kejora yang membimbing dan galaksi ungu yang melambangkan takdir cinta abadi.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 4: SPOTLIGHT VARIAN 1 & 2 ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">03. DETAIL VARIAN: STELLA MARIS & SOLAR SOLSTICE</div>
+      <div class="section-badge">Deep Dive 1 & 2</div>
+    </div>
+
+    <!-- Varian 1 -->
+    <div class="product-spotlight">
+      <div class="spotlight-gallery">
+        <img class="spotlight-img" src="azure_bloom_bracelet_1791474570357.jpg" alt="Stella Maris Bracelet">
+        <img class="spotlight-img" src="anime_aoi_blue_1791474822824.jpg" alt="Anime Aoi">
+      </div>
+      <div class="spotlight-info">
+        <span class="spotlight-tag">Varian 1 · Sky Azure Blue</span>
+        <h3>STELLA MARIS (The Morning Star)</h3>
+        <p style="font-size: 8.5pt; color: #666; margin-bottom: 6px;">
+          <b>Karakter Anime</b>: Aoi (碧) · <b>Simbol</b>: Bintang Kejora & Lautan Tenang · <b>Material</b>: Kawat perak, kelopak resin biru transparan tepi emas, kristal biru laut.
+        </p>
+        <p style="font-size: 9pt; margin-bottom: 6px;">
+          <b>Karakteristik</b>: Mewakili langit fajar yang jernih. Sosok wanita yang tulus, dewasa, setia, dan menjadi tempat bersandar paling damai saat dunia luar terasa bising.
+        </p>
+        <div class="quote-box">
+          "Di antara ombak dunia yang bising, senyumanmu adalah dermaga paling tenang di hatiku."
+        </div>
+        <p style="font-size: 8.5pt; color: #444;">
+          <b>Alasan Menjual ke Cowok</b>: Memberikan kado ini adalah tanda penghargaan bahwa sang pacar adalah sosok penyejuk hati yang selalu ia andalkan.
+        </p>
+      </div>
+    </div>
+
+    <!-- Varian 2 -->
+    <div class="product-spotlight">
+      <div class="spotlight-gallery">
+        <img class="spotlight-img" src="honey_amber_bracelet_1791474591620.jpg" alt="Solar Solstice Bracelet">
+        <img class="spotlight-img" src="anime_kohaku_amber_1791474844459.jpg" alt="Anime Kohaku">
+      </div>
+      <div class="spotlight-info">
+        <span class="spotlight-tag" style="background:#fef3c7; color:#92400e;">Varian 2 · Honey Amber Peach</span>
+        <h3>SOLAR SOLSTICE (The Sunlit Muse)</h3>
+        <p style="font-size: 8.5pt; color: #666; margin-bottom: 6px;">
+          <b>Karakter Anime</b>: Kohaku (琥珀) · <b>Simbol</b>: Surya Senja (Golden Hour) & Arloji Waktu Emas · <b>Material</b>: Kawat emas berkilau, kelopak peach madu tepi emas, kristal amber hangat.
+        </p>
+        <p style="font-size: 9pt; margin-bottom: 6px;">
+          <b>Karakteristik</b>: Mewakili kehangatan matahari sore musim gugur. Sosok wanita yang penuh kasih, perhatian, dan senyumannya menyembuhkan rasa lelah.
+        </p>
+        <div class="quote-box">
+          "Senyumanmu seperti cahaya matahari sore: selalu memberi kehangatan lembut yang merasuk ke dalam hati."
+        </div>
+        <p style="font-size: 8.5pt; color: #444;">
+          <b>Alasan Menjual ke Cowok</b>: Cara terbaik bagi pria untuk berterima kasih atas segala perhatian dan kehangatan yang diberikan pacarnya.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 5: SPOTLIGHT VARIAN 3 & 4 ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">04. DETAIL VARIAN: LUNA CRESCENT & COSMIC NOVA</div>
+      <div class="section-badge">Deep Dive 3 & 4</div>
+    </div>
+
+    <!-- Varian 3 -->
+    <div class="product-spotlight">
+      <div class="spotlight-gallery">
+        <img class="spotlight-img" src="sakura_blush_bracelet_1791474613395.jpg" alt="Luna Crescent Bracelet">
+        <img class="spotlight-img" src="anime_sakurako_pink_1791474883069.jpg" alt="Anime Sakurako">
+      </div>
+      <div class="spotlight-info">
+        <span class="spotlight-tag" style="background:#fce7f3; color:#9d174d;">Varian 3 · Sakura Blush Pink</span>
+        <h3>LUNA CRESCENT (The First Love Petals)</h3>
+        <p style="font-size: 8.5pt; color: #666; margin-bottom: 6px;">
+          <b>Karakter Anime</b>: Sakurako (桜子) · <b>Simbol</b>: Bulan Sabit Muda & Surat Cinta Lilin Merah · <b>Material</b>: Kawat perak halus, kelopak pink sakura tepi emas, manik baby pink.
+        </p>
+        <p style="font-size: 9pt; margin-bottom: 6px;">
+          <b>Karakteristik</b>: Mewakili cinta pertama yang manis dan berdebar. Sosok gadis yang polos, pemalu, feminin, dan menghargai ketulusan asmara murni.
+        </p>
+        <div class="quote-box">
+          "Mencintaimu itu seperti menatap bulan sabit pertama kali: manis, lembut, dan selalu membuat hatiku berdebar."
+        </div>
+        <p style="font-size: 8.5pt; color: #444;">
+          <b>Alasan Menjual ke Cowok</b>: <b>Varian paling laris untuk kado anniversary, jadian, dan ulang tahun pacar!</b> Sangat manis dan tidak pernah salah.
+        </p>
+      </div>
+    </div>
+
+    <!-- Varian 4 -->
+    <div class="product-spotlight">
+      <div class="spotlight-gallery">
+        <img class="spotlight-img" src="magenta_bloom_bracelet_1791474664489.jpg" alt="Cosmic Nova Bracelet">
+        <img class="spotlight-img" src="anime_rion_magenta_1791474913795.jpg" alt="Anime Rion">
+      </div>
+      <div class="spotlight-info">
+        <span class="spotlight-tag" style="background:#fdf2f8; color:#be185d;">Varian 4 · Vivid Magenta Fuchsia</span>
+        <h3>COSMIC NOVA (The Fireworks Spark)</h3>
+        <p style="font-size: 8.5pt; color: #666; margin-bottom: 6px;">
+          <b>Karakter Anime</b>: Rion (莉音) · <b>Simbol</b>: Komet Bintang Jatuh & Lentera Bunga Kristal · <b>Material</b>: Kawat perak, kelopak magenta pekat tepi emas, daun hijau, kristal raspberry.
+        </p>
+        <p style="font-size: 9pt; margin-bottom: 6px;">
+          <b>Karakteristik</b>: Mewakili lintasan bintang jatuh yang memukau. Sosok wanita yang energik, ceria, hobi bercanda, percaya diri, dan selalu membawa tawa.
+        </p>
+        <div class="quote-box">
+          "Terima kasih sudah mewarnai duniaku dengan tawa riang dan senyum manismu setiap hari."
+        </div>
+        <p style="font-size: 8.5pt; color: #444;">
+          <b>Alasan Menjual ke Cowok</b>: Hadiah untuk pacar yang humoris dan membuat hubungan selalu berwarna dan tidak pernah membosankan.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 6: SPOTLIGHT VARIAN 5 & ART CARD TOUCHPOINT ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">05. DETAIL VARIAN: MIDNIGHT GALAXY & PHOTOCARD STRATEGY</div>
+      <div class="section-badge">Deep Dive 5 & Collaterals</div>
+    </div>
+
+    <!-- Varian 5 -->
+    <div class="product-spotlight">
+      <div class="spotlight-gallery">
+        <img class="spotlight-img" src="violet_twilight_bracelet_1791474690416.jpg" alt="Midnight Galaxy Bracelet">
+        <img class="spotlight-img" src="anime_shion_violet_1791474940597.jpg" alt="Anime Shion">
+      </div>
+      <div class="spotlight-info">
+        <span class="spotlight-tag" style="background:#f3e8ff; color:#6b21a8;">Varian 5 · Twilight Violet Purple</span>
+        <h3>MIDNIGHT GALAXY (The Celestial Destiny)</h3>
+        <p style="font-size: 8.5pt; color: #666; margin-bottom: 6px;">
+          <b>Karakter Anime</b>: Shion (紫苑) · <b>Simbol</b>: Bulan Purnama Malam & Cermin Bintang Kosmik · <b>Material</b>: Kawat perak, kelopak ungu lembayung tepi emas, kristal ametis berkilau.
+        </p>
+        <p style="font-size: 9pt; margin-bottom: 6px;">
+          <b>Karakteristik</b>: Mewakili kemegahan langit malam bertabur jutaan bintang. Sosok wanita yang anggun, memiliki selera tinggi, mandiri, dan memancarkan pesona bangsawan.
+        </p>
+        <div class="quote-box">
+          "Dari miliaran bintang di seluruh galaksi ini, semesta menuntunku untuk menemukan satu-satunya dirimu."
+        </div>
+        <p style="font-size: 8.5pt; color: #444;">
+          <b>Alasan Menjual ke Cowok</b>: Kado berkelas yang menyatakan bahwa wanita tersebut adalah sosok istimewa yang tak ternilai harganya.
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 10px;">
+      <div class="card-title">🎴 Implementasi Kartu Koleksi Anime (Collectible Anime Photocard)</div>
+      <div class="grid-2" style="margin-bottom: 0;">
+        <div style="font-size: 8.5pt; color: #444;">
+          <b>Spesifikasi Cetak:</b>
+          <ul style="padding-left: 16px; margin-top: 4px; line-height: 1.5;">
+            <li>Ukuran: A7 (7.4 x 10.5 cm) atau standar Photocard K-Pop (5.5 x 8.5 cm).</li>
+            <li>Bahan: Art Carton 310gsm dengan laminasi <i>glitter hologram</i> atau <i>doff matte</i>.</li>
+            <li>Sisi Depan: Gambar anime karakter Flowerjuicee dengan aksen foil emas.</li>
+            <li>Sisi Belakang: Kutipan puitis dan kolom "To/From" untuk pesan tangan cowok.</li>
+          </ul>
+        </div>
+        <div style="font-size: 8.5pt; color: #444;">
+          <b>Dampak Finansial:</b>
+          <p style="margin-top: 4px; line-height: 1.5;">
+            Biaya cetak photocard hanya sekitar <b>Rp 800 - Rp 1.500 per lembar</b>, tetapi keberadaannya mengubah persepsi produk dari gelang manik biasa menjadi <i>official brand merchandise</i> bernilai jual tinggi.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 7: TEMPLATE KARTU UCAPAN SIAP CETAK ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">06. TEMPLATE KARTU UCAPAN SIAP CETAK (A7 CARDS)</div>
+      <div class="section-badge">Printable Collaterals</div>
+    </div>
+
+    <p style="font-size: 8.5pt; color: #666; margin-bottom: 10px;">
+      Garis putus-putus menunjukkan batas potong (crop mark). Siap dicetak langsung pada kertas Linen atau Art Paper 260gsm.
+    </p>
+
+    <div class="printable-card-grid">
+      <!-- Card 1 -->
+      <div class="print-card">
+        <div class="print-card-header">
+          <div class="title">✦ STELLA MARIS ✦</div>
+          <div class="subtitle">The Morning Star · Flowerjuicee</div>
+        </div>
+        <div class="print-card-body">
+          "Di antara dunia yang bising dan penuh badai, kehadiranmu adalah langit fajar yang jernih. Terima kasih telah selalu menjadi bintang kejora dan dermaga paling tenang di hidupku."
+        </div>
+        <div class="print-card-footer">
+          <div>To : ____________________</div>
+          <div>From : ____________________</div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="print-card">
+        <div class="print-card-header">
+          <div class="title">✦ SOLAR SOLSTICE ✦</div>
+          <div class="subtitle">The Sunlit Muse · Flowerjuicee</div>
+        </div>
+        <div class="print-card-body">
+          "Bagiku, senyumanmu seperti cahaya matahari senja: tidak pernah menyilaukan, tetapi selalu memberi kehangatan yang merasuk lembut hingga ke dalam hati."
+        </div>
+        <div class="print-card-footer">
+          <div>To : ____________________</div>
+          <div>From : ____________________</div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="print-card">
+        <div class="print-card-header">
+          <div class="title">✦ LUNA CRESCENT ✦</div>
+          <div class="subtitle">First Love Petals · Flowerjuicee</div>
+        </div>
+        <div class="print-card-body">
+          "Mencintaimu itu seperti menatap bulan sabit pertama kali: manis, murni, dan selalu membuat hatiku berdebar seperti kelopak bunga yang mekar di musim semi."
+        </div>
+        <div class="print-card-footer">
+          <div>To : ____________________</div>
+          <div>From : ____________________</div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="print-card">
+        <div class="print-card-header">
+          <div class="title">✦ COSMIC NOVA ✦</div>
+          <div class="subtitle">The Spark of Joy · Flowerjuicee</div>
+        </div>
+        <div class="print-card-body">
+          "Dulu aku selalu berdoa saat melihat bintang jatuh; sekarang aku tahu doa itu terkabul dalam bentuk dirimu yang selalu mewarnai hariku dengan tawa dan sukacita."
+        </div>
+        <div class="print-card-footer">
+          <div>To : ____________________</div>
+          <div>From : ____________________</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5 (Centered below) -->
+    <div style="max-width: 420px; margin: 12px auto 0 auto;">
+      <div class="print-card">
+        <div class="print-card-header">
+          <div class="title">✦ MIDNIGHT GALAXY ✦</div>
+          <div class="subtitle">The Celestial Destiny · Flowerjuicee</div>
+        </div>
+        <div class="print-card-body">
+          "Dari miliaran bintang di seluruh galaksi ini, semesta menuntunku untuk menemukan satu-satunya dirimu. Pesonamu adalah keajaiban yang ingin kujaga selamanya."
+        </div>
+        <div class="print-card-footer">
+          <div>To : ____________________</div>
+          <div>From : ____________________</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 8: COPYWRITING & E-COMMERCE PLAYBOOK ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">07. COPYWRITING & E-COMMERCE PLAYBOOK</div>
+      <div class="section-badge">Sales Engine</div>
+    </div>
+
+    <div class="card" style="margin-bottom: 14px;">
+      <div class="card-title">🛍️ Judul Produk Optimal SEO (Shopee & TikTok Shop)</div>
+      <p style="background: #f4f1ea; padding: 8px 12px; border-radius: 6px; font-family: monospace; font-size: 8.5pt; color: #333; margin-top: 4px;">
+        [GIFT SET] Flowerjuicee · Gelang Bunga Resin Kawat Handmade Aesthetic Kado Pacar Wanita The Celestial Series Bintang & Bulan
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">🎬 Skrip Video 1 (Target Cowok)</div>
+        <p style="font-size: 8pt; color: #8c6514; font-weight: 600; margin-bottom: 4px;">HOOK VIDEO: CARA COWOK GREEN FLAG MILIH KADO</p>
+        <p style="font-size: 8.5pt; color: #444; line-height: 1.4;">
+          <b>Visual</b>: Cowok bingung memilih kado, lalu melihat gelang Flowerjuicee.<br>
+          <b>Voiceover/Teks</b>: "Gak perlu pusing nebak ukuran cincin pacar kamu. Cukup pilih gelang Flowerjuicee sesuai karakternya:<br>
+          💙 Biru buat dia yang selalu bikin harimu tenang.<br>
+          🍯 Madu buat dia yang senyumnya selalu bikin hangat.<br>
+          🌸 Pink buat dia yang termanis di matamu.<br>
+          💖 Magenta buat dia yang selalu bikin ketawa.<br>
+          💜 Ungu buat dia yang paling anggun dan istimewa.<br>
+          Bisa request ditulisin surat ucapan gratis lho! Link di bio ya!"
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">✨ Skrip Video 2 (Target Cewek)</div>
+        <p style="font-size: 8pt; color: #8c6514; font-weight: 600; margin-bottom: 4px;">HOOK VIDEO: GELANG BERDASARKAN KEPRIBADIAN KAMU</p>
+        <p style="font-size: 8.5pt; color: #444; line-height: 1.4;">
+          <b>Visual</b>: Transisi estetik memakai gelang di tangan di bawah cahaya matahari sore.<br>
+          <b>Voiceover/Teks</b>: "Kalau kepribadian kamu adalah perhiasan, kamu tipe yang mana?<br>
+          Stella Maris si tenang bagai laut, atau Luna Crescent yang manis seperti cinta pertama?<br>
+          Setiap gelang handmade Flowerjuicee ini punya makna semesta tersendiri ✨ Tag orang yang menurutmu cocok banget pakai varian ini!"
+        </p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 10px;">
+      <div class="card-title">🏷️ Hashtag & Tagar Penjualan Rekomendasi</div>
+      <p style="font-size: 8.5pt; color: #555; line-height: 1.6;">
+        <code>#kadopacar #idehadiahcewek #flowerjuicee #gelangaesthetic #gelanghandmade #gelangbunga #kadoanniversary #racuntiktokshop #aestheticjewelry #kadocowokkecewek #coquettecore</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================== HALAMAN 9: STRATEGI PRICING & PACKAGING ==================== -->
+  <div class="page">
+    <div class="section-header">
+      <div class="section-title">08. STRATEGI HARGA & PACKAGING ARCHITECTURE</div>
+      <div class="section-badge">Pricing Architecture</div>
+    </div>
+
+    <div class="grid-3">
+      <!-- Tier 1 -->
+      <div class="card">
+        <span class="pill">Tier 1 · Everyday</span>
+        <h4 style="margin: 6px 0; font-size: 11pt; color: #181324;">Single Essential</h4>
+        <div style="font-size: 14pt; font-weight: 700; color: #b38728; margin-bottom: 8px;">Rp 49.000 – 59.000</div>
+        <p style="font-size: 8pt; color: #666; margin-bottom: 8px;">Untuk pembelian pribadi (pelajar / mahasiswi OOTD harian).</p>
+        <ul style="font-size: 8pt; color: #444; padding-left: 14px; line-height: 1.4;">
+          <li>1x Gelang Pilihan</li>
+          <li>Fabric Pouch cantik</li>
+          <li>Kartu ucapan standar</li>
+          <li>Kemasan bubble wrap</li>
+        </ul>
+      </div>
+
+      <!-- Tier 2 -->
+      <div class="card" style="border: 2px solid #b8860b; background: #fffcf5;">
+        <span class="pill" style="background:#b8860b; color:#fff;">Tier 2 · Best Seller</span>
+        <h4 style="margin: 6px 0; font-size: 11pt; color: #181324;">Signature Gift Box</h4>
+        <div style="font-size: 14pt; font-weight: 700; color: #b38728; margin-bottom: 8px;">Rp 89.000 – 119.000</div>
+        <p style="font-size: 8pt; color: #666; margin-bottom: 8px;"><b>Target Kado Cowok.</b> Siap langsung diberikan tanpa bungkus lagi.</p>
+        <ul style="font-size: 8pt; color: #444; padding-left: 14px; line-height: 1.4;">
+          <li>1x Gelang Pilihan</li>
+          <li>Hardbox pita satin mewah</li>
+          <li>Bantalan beludru perhiasan</li>
+          <li>Collectible Photocard Karakter</li>
+          <li>Free Handwritten Love Letter</li>
+          <li>Mini Buket Bunga Kering</li>
+        </ul>
+      </div>
+
+      <!-- Tier 3 -->
+      <div class="card">
+        <span class="pill">Tier 3 · Premium</span>
+        <h4 style="margin: 6px 0; font-size: 11pt; color: #181324;">The Celestial Duo</h4>
+        <div style="font-size: 14pt; font-weight: 700; color: #b38728; margin-bottom: 8px;">Rp 149.000 – 179.000</div>
+        <p style="font-size: 8pt; color: #666; margin-bottom: 8px;">Paket Couple & Sahabat (Bestie Duo / Sun & Moon).</p>
+        <ul style="font-size: 8pt; color: #444; padding-left: 14px; line-height: 1.4;">
+          <li>2x Gelang Pilihan Sepasang</li>
+          <li>Exclusive Double Gift Box</li>
+          <li>2x Photocard Karakter</li>
+          <li>Duo Bond Certificate Card</li>
+          <li>Scented Rose Mist spray</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 14px;">
+      <div class="card-title">📦 Standar Unboxing Experience yang Mengundang Review Bintang 5</div>
+      <div class="grid-2" style="margin-bottom: 0;">
+        <div style="font-size: 8.5pt; color: #444; line-height: 1.5;">
+          <b>1. Sensasi Aroma Khas (Signature Scent):</b><br>
+          Semprotkan wewangian lembut bertema bunga/vanila pada kertas tisu penutup sebelum boks ditutup. Aroma wangi yang keluar saat unboxing memberikan kesan mewah seketika.
+        </div>
+        <div style="font-size: 8.5pt; color: #444; line-height: 1.5;">
+          <b>2. Layanan Tambahan Foto Polaroid (+Rp 5.000):</b><br>
+          Tawarkan opsi cetak 1 lembar foto pembeli bersama pacarnya untuk diselipkan di dalam kotak. Fitur ini sangat disukai dan memicu ulasan foto/video viral di Shopee & TikTok.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 16px; text-align: center; font-size: 8.5pt; color: #888;">
+      © 2026 Flowerjuicee · Handmade with Love · All Rights Reserved
+    </div>
+  </div>
+
+</body>
+</html>
+`;
+
+const htmlPath = path.join(__dirname, 'Flowerjuicee_The_Celestial_Collection_BrandBook.html');
+const pdfPath = path.join(__dirname, 'Flowerjuicee_The_Celestial_Collection_BrandBook.pdf');
+
+fs.writeFileSync(htmlPath, htmlContent, 'utf8');
+console.log('HTML file written to ' + htmlPath);
+
+const edgePath = "C:\\\\Program Files (x86)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe";
+console.log('Generating PDF via Microsoft Edge...');
+const cmd = '"' + edgePath + '" --headless=new --disable-gpu --allow-file-access-from-files --print-to-pdf="' + pdfPath + '" --no-pdf-header-footer "' + htmlPath + '"';
+execSync(cmd);
+
+if (fs.existsSync(pdfPath)) {
+  const stats = fs.statSync(pdfPath);
+  console.log('PDF successfully created at: ' + pdfPath + ' (' + stats.size + ' bytes)');
+} else {
+  console.error('Failed to create PDF');
+  process.exit(1);
+}
