@@ -3172,7 +3172,7 @@
   <script>
     // --- 1. DEFAULT DATA CONFIGURATION (FLOWERJUICEE STOREFRONT) ---
     const DEFAULT_STORE_CONFIG = {
-      updatedAt: "2026-10-10T16:50:00.000Z",
+      updatedAt: "2026-10-01T00:00:00.000Z",
       // Initial administrator authentication credential digest
       pinHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
       heroTitle: "Made by hand, chosen by you.",
@@ -3538,10 +3538,14 @@
       }
 
       try {
-        const cacheBuster = `t=${Date.now()}`;
+        const cacheBuster = `t=${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
         const response = await fetch(`store_config.json?${cacheBuster}`, {
           cache: 'no-store',
-          headers: { 'Accept': 'application/json' }
+          headers: { 
+            'Accept': 'application/json',
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache'
+          }
         });
 
         if (!response.ok) {
@@ -3556,11 +3560,19 @@
         const localUpdated = storeConfig.updatedAt || "";
         const remoteUpdated = remoteCfg.updatedAt || "";
 
-        // If manual trigger or remote is newer/different
-        if (manualTrigger || (remoteUpdated && remoteUpdated !== localUpdated)) {
+        // If manual trigger, or local has no timestamp, or remote timestamp differs
+        if (manualTrigger || !localUpdated || (remoteUpdated && remoteUpdated !== localUpdated)) {
           storeConfig = normalizeStoreConfig(remoteCfg);
-          localStorage.setItem('flowerjuicee_store_config', JSON.stringify(storeConfig));
+          
+          // 1. ALWAYS APPLY IMMEDIATELY to UI first so visitors & other devices see the update!
           applyStoreConfig();
+
+          // 2. Safely attempt to persist to localStorage (never crash or block UI if quota exceeded)
+          try {
+            localStorage.setItem('flowerjuicee_store_config', JSON.stringify(storeConfig));
+          } catch (storageErr) {
+            console.warn("Storage quota full, cached in memory:", storageErr);
+          }
           
           if (adminDrawerBackdrop && adminDrawerBackdrop.classList.contains('active')) {
             populateProductPicker();
@@ -3683,8 +3695,8 @@
       }
     }
 
-    // Client-Side Canvas Image Compressor
-    function compressImageFile(file, maxWidth = 1200, maxHeight = 1200, quality = 0.82) {
+    // Client-Side Canvas Image Compressor (Optimized for Mobile LocalStorage & Fast Multi-Device Sync)
+    function compressImageFile(file, maxWidth = 720, maxHeight = 960, quality = 0.65) {
       return new Promise((resolve, reject) => {
         if (!file || !file.type.startsWith('image/')) {
           return reject(new Error('File yang dipilih bukan format gambar yang didukung.'));
