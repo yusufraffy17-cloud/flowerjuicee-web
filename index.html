@@ -2132,6 +2132,39 @@
       align-items: center;
       gap: 3px;
     }
+    .adm-sync-status-pill {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 1px solid var(--border-lace);
+      background: var(--bg-cream);
+      color: var(--choc-main);
+      transition: var(--transition);
+    }
+    .adm-sync-status-pill.synced {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+    .adm-sync-status-pill.draft {
+      background: #fefce8;
+      color: #854d0e;
+      border-color: #fef08a;
+    }
+    .adm-sync-status-pill.syncing {
+      background: #eff6ff;
+      color: #1e40af;
+      border-color: #bfdbfe;
+    }
+    .adm-sync-status-pill.offline {
+      background: #f3f4f6;
+      color: #4b5563;
+      border-color: #e5e7eb;
+    }
     @media (max-width: 520px) {
       .adm-slide-item {
         grid-template-columns: 1fr;
@@ -3084,15 +3117,49 @@
               </button>
             </div>
           </div>
+
+          <!-- Cloud Sync Card -->
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>🌐 Sinkronisasi Cloud & Publikasi Multi-Device</span>
+              <span class="adm-sync-status-pill synced" id="admSyncStatusBadge">🟢 Tersinkronisasi Live</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--choc-muted); margin-bottom: 14px; line-height: 1.45;">
+              Terbitkan perubahan yang Anda buat di perangkat ini (foto slide, filosofi, harga, paket) ke server GitHub agar <b>otomatis muncul di semua HP, tablet, laptop lain, dan semua pengunjung website</b>.
+            </div>
+
+            <div class="adm-form-group">
+              <label class="adm-label">GitHub Personal Access Token (Untuk Sinkronisasi Otomatis)</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="password" class="adm-input" id="admGhToken" placeholder="ghp_..." style="font-family: monospace; font-size: 0.82rem; flex: 1;" onchange="saveGitHubTokenFromInput(this.value)">
+                <button type="button" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700;" onclick="toggleGhTokenVisibility()">👁️ Tampilkan</button>
+              </div>
+              <div style="font-size: 0.72rem; color: var(--choc-muted); margin-top: 4px;">
+                Token tersimpan privat di browser Anda untuk otorisasi update repositori GitHub.
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;">
+              <button type="button" class="btn btn-primary" style="padding: 9px 20px; font-size: 0.84rem; background: linear-gradient(135deg, #15803d, #16a34a); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); display: inline-flex; align-items: center; gap: 6px;" onclick="publishStoreConfigToGitHub()">
+                <span>🚀 Terbitkan ke Semua Perangkat Sekarang</span>
+              </button>
+              <button type="button" class="btn btn-outline" style="padding: 9px 16px; font-size: 0.82rem;" onclick="syncWithRemoteConfig(true)">
+                <span>🔄 Tarik Data Terbaru dari Cloud</span>
+              </button>
+            </div>
+          </div>
         </div>
 
       </div>
 
       <!-- Drawer Footer -->
-      <div class="admin-drawer-footer">
+      <div class="admin-drawer-footer" style="display: flex; gap: 8px; justify-content: flex-end; align-items: center; flex-wrap: wrap;">
         <button class="btn-admin-cancel" id="cancelAdminDrawerBtn">Tutup</button>
-        <button class="btn-admin-save" id="saveAdminDrawerBtn" onclick="saveAdminChanges()">
-          <span>💾 Simpan & Terapkan Perubahan</span>
+        <button class="btn btn-outline" style="padding: 9px 15px; font-size: 0.84rem; font-weight: 700; border-color: var(--choc-main); color: var(--choc-main);" id="saveLocalAdminDrawerBtn" onclick="saveAdminChanges(false)">
+          <span>💾 Simpan Lokal</span>
+        </button>
+        <button class="btn-admin-save" id="publishAdminDrawerBtn" style="background: linear-gradient(135deg, #15803d, #16a34a); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);" onclick="publishStoreConfigToGitHub()">
+          <span>🚀 Terbitkan ke Semua Perangkat</span>
         </button>
       </div>
     </aside>
@@ -3105,6 +3172,7 @@
   <script>
     // --- 1. DEFAULT DATA CONFIGURATION (FLOWERJUICEE STOREFRONT) ---
     const DEFAULT_STORE_CONFIG = {
+      updatedAt: "2026-10-10T16:50:00.000Z",
       // Initial administrator authentication credential digest
       pinHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
       heroTitle: "Made by hand, chosen by you.",
@@ -3141,8 +3209,8 @@
           num: 1,
           name: "STELLA MARIS",
           symbol: "🌟 Bintang Kejora (The Morning Star)",
-          persona: "Fajar Teduh & Setia",
-          traits: "Tenang, Setia, Teduh, Penuntun Arah",
+          persona: "Biru melambangkan kepercayaan dan ketenangan.",
+          traits: "Sebagai penuntun, ia adalah hal yang bisa kamu andalkan setiap hari.",
           quote: "Di antara ombak dunia yang bising, senyumanmu adalah dermaga paling tenang di hatiku.",
           flowerColor: "Sky Azure Blue",
           gemstone: "Safir Biru Fajar",
@@ -3154,7 +3222,8 @@
           imageHand: "gelang_hand_cream_1_azure.jpg",
           slides: [
             "gelang_hand_cream_1_azure.jpg",
-            "gelang_azure_real_kosmik_master.jpg"
+            "gelang_azure_real_kosmik_master.jpg",
+            "gelang_azure_brand_card_table.jpg"
           ],
           stock: "ready",
           gemColor: "#38bdf8",
@@ -3370,7 +3439,83 @@
       ]
     };
 
-    // --- 2. CONFIG STATE MANAGEMENT ---
+    // --- 2. CONFIG STATE MANAGEMENT & CLOUD SYNC ---
+    const GH_CONFIG = {
+      owner: "yusufraffy17-cloud",
+      repo: "flowerjuicee-web",
+      filePath: "store_config.json",
+      defaultToken: ""
+    };
+
+    function getGitHubToken() {
+      const stored = localStorage.getItem('flowerjuicee_gh_token');
+      return (stored && stored.trim()) ? stored.trim() : GH_CONFIG.defaultToken;
+    }
+
+    function saveGitHubTokenFromInput(val) {
+      if (val && val.trim()) {
+        localStorage.setItem('flowerjuicee_gh_token', val.trim());
+        showToast("✓ GitHub Token berhasil disimpan di perangkat ini.");
+      }
+    }
+
+    function toggleGhTokenVisibility() {
+      const inp = document.getElementById('admGhToken');
+      if (inp) {
+        inp.type = (inp.type === 'password') ? 'text' : 'password';
+      }
+    }
+
+    function updateSyncStatusBadge(status) {
+      const badge = document.getElementById('admSyncStatusBadge');
+      if (!badge) return;
+      badge.className = `adm-sync-status-pill ${status}`;
+      if (status === 'synced') {
+        badge.innerHTML = `🟢 Tersinkronisasi Live`;
+      } else if (status === 'draft') {
+        badge.innerHTML = `🟡 Ada Draf Belum Terbit`;
+      } else if (status === 'syncing') {
+        badge.innerHTML = `🔄 Menerbitkan ke Server...`;
+      } else if (status === 'offline') {
+        badge.innerHTML = `⚪ Mode Offline`;
+      }
+    }
+
+    function normalizeStoreConfig(parsed) {
+      if (!parsed) return JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG));
+      const cfg = { ...DEFAULT_STORE_CONFIG, ...parsed, variants: parsed.variants || DEFAULT_STORE_CONFIG.variants };
+      
+      // Ensure slides exist on each variant
+      cfg.variants.forEach((v, idx) => {
+        const defV = DEFAULT_STORE_CONFIG.variants[idx] || {};
+        if (!v.slides || !Array.isArray(v.slides) || v.slides.length === 0) {
+          v.slides = [v.imageHand || defV.imageHand, v.image || defV.image].filter(Boolean);
+          if (v.slides.length === 0) v.slides = ["gelang_hand_cream_1_azure.jpg"];
+        }
+      });
+      if (cfg.masterFrame) {
+        if (!cfg.masterFrame.slides || !Array.isArray(cfg.masterFrame.slides) || cfg.masterFrame.slides.length === 0) {
+          cfg.masterFrame.slides = [cfg.masterFrame.imageHand || DEFAULT_STORE_CONFIG.masterFrame.imageHand, cfg.masterFrame.image || DEFAULT_STORE_CONFIG.masterFrame.image].filter(Boolean);
+        }
+      }
+      if (!cfg.packages || !Array.isArray(cfg.packages) || cfg.packages.length === 0) {
+        cfg.packages = JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG.packages));
+      }
+      return cfg;
+    }
+
+    function loadStoreConfig() {
+      try {
+        const saved = localStorage.getItem('flowerjuicee_store_config');
+        if (saved) {
+          return normalizeStoreConfig(JSON.parse(saved));
+        }
+      } catch (e) {
+        console.error("Error loading config from localStorage:", e);
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG));
+    }
+
     let storeConfig = loadStoreConfig();
     let celestialVariants = storeConfig.variants;
     let masterFrameData = storeConfig.masterFrame;
@@ -3379,34 +3524,145 @@
     let cart = [];
     let currentlyEditingProductId = celestialVariants[0].id;
 
-    function loadStoreConfig() {
+    // Remote Store Config Sync (SWR - Stale-While-Revalidate)
+    async function syncWithRemoteConfig(manualTrigger = false) {
+      if (manualTrigger) {
+        showToast("⏳ Mengambil data konfigurasi terbaru dari cloud...");
+        updateSyncStatusBadge('syncing');
+      }
+
       try {
-        const saved = localStorage.getItem('flowerjuicee_store_config');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          const cfg = { ...DEFAULT_STORE_CONFIG, ...parsed, variants: parsed.variants || DEFAULT_STORE_CONFIG.variants };
-          // Ensure slides exist on each variant
-          cfg.variants.forEach((v, idx) => {
-            const defV = DEFAULT_STORE_CONFIG.variants[idx] || {};
-            if (!v.slides || !Array.isArray(v.slides) || v.slides.length === 0) {
-              v.slides = [v.imageHand || defV.imageHand, v.image || defV.image].filter(Boolean);
-              if (v.slides.length === 0) v.slides = ["gelang_hand_cream_1_azure.jpg"];
+        const cacheBuster = `t=${Date.now()}`;
+        const response = await fetch(`store_config.json?${cacheBuster}`, {
+          cache: 'no-store',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) {
+          if (manualTrigger) showToast("ℹ️ File store_config.json belum ada di cloud. Silakan klik Terbitkan!");
+          updateSyncStatusBadge('draft');
+          return;
+        }
+
+        const remoteCfg = await response.json();
+        if (!remoteCfg || !remoteCfg.variants) return;
+
+        const localUpdated = storeConfig.updatedAt || "";
+        const remoteUpdated = remoteCfg.updatedAt || "";
+
+        // If manual trigger or remote is newer/different
+        if (manualTrigger || (remoteUpdated && remoteUpdated !== localUpdated)) {
+          storeConfig = normalizeStoreConfig(remoteCfg);
+          localStorage.setItem('flowerjuicee_store_config', JSON.stringify(storeConfig));
+          applyStoreConfig();
+          
+          if (adminDrawerBackdrop && adminDrawerBackdrop.classList.contains('active')) {
+            populateProductPicker();
+            loadProductToAdminForm(currentlyEditingProductId);
+            loadHeroAndSettingsToAdminForm();
+            renderAdminPackages();
+          }
+
+          updateSyncStatusBadge('synced');
+          if (manualTrigger) showToast("✓ Data toko berhasil disinkronkan dari cloud!");
+        } else {
+          updateSyncStatusBadge('synced');
+        }
+      } catch (err) {
+        console.warn("Could not sync remote store_config.json (offline/local):", err);
+        updateSyncStatusBadge('offline');
+        if (manualTrigger) alert("Gagal mengambil data dari cloud: " + err.message);
+      }
+    }
+
+    // Publish store_config.json to GitHub API
+    async function publishStoreConfigToGitHub() {
+      let token = getGitHubToken();
+      if (!token) {
+        const inputToken = prompt("Masukkan GitHub Personal Access Token Anda untuk menerbitkan ke internet:");
+        if (!inputToken || !inputToken.trim()) {
+          alert("Penerbitan dibatalkan. GitHub Token diperlukan untuk memperbarui website.");
+          return;
+        }
+        token = inputToken.trim();
+        saveGitHubTokenFromInput(token);
+        const tokenInputEl = document.getElementById('admGhToken');
+        if (tokenInputEl) tokenInputEl.value = token;
+      }
+
+      // 1. Save local form changes first
+      saveAdminChanges(false);
+
+      // 2. Set new timestamp
+      storeConfig.updatedAt = new Date().toISOString();
+      saveStoreConfig();
+
+      updateSyncStatusBadge('syncing');
+      showToast("⏳ Menerbitkan ke GitHub agar aktif di seluruh dunia...");
+
+      const btn = document.getElementById('publishAdminDrawerBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>⏳ Menerbitkan...</span>`;
+      }
+
+      try {
+        // Step A: Get current file sha from GitHub
+        let sha = null;
+        try {
+          const checkRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.filePath}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Accept': 'application/vnd.github.v3+json'
             }
           });
-          if (cfg.masterFrame) {
-            if (!cfg.masterFrame.slides || !Array.isArray(cfg.masterFrame.slides) || cfg.masterFrame.slides.length === 0) {
-              cfg.masterFrame.slides = [cfg.masterFrame.imageHand || DEFAULT_STORE_CONFIG.masterFrame.imageHand, cfg.masterFrame.image || DEFAULT_STORE_CONFIG.masterFrame.image].filter(Boolean);
-            }
+          if (checkRes.ok) {
+            const fileData = await checkRes.json();
+            sha = fileData.sha;
           }
-          if (!cfg.packages || !Array.isArray(cfg.packages) || cfg.packages.length === 0) {
-            cfg.packages = JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG.packages));
-          }
-          return cfg;
+        } catch (e) {
+          console.warn("File sha check skipped or not found:", e);
         }
-      } catch (e) {
-        console.error("Error loading config:", e);
+
+        // Step B: Encode JSON to UTF-8 Base64
+        const jsonString = JSON.stringify(storeConfig, null, 2);
+        const base64Content = btoa(unescape(encodeURIComponent(jsonString)));
+
+        // Step C: PUT to GitHub Contents API
+        const putBody = {
+          message: `admin: Update store config [${new Date().toLocaleString('id-ID')}]`,
+          content: base64Content,
+          branch: "main"
+        };
+        if (sha) putBody.sha = sha;
+
+        const putRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.filePath}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(putBody)
+        });
+
+        if (!putRes.ok) {
+          const errData = await putRes.json().catch(() => ({}));
+          throw new Error(errData.message || `HTTP ${putRes.status}`);
+        }
+
+        updateSyncStatusBadge('synced');
+        showToast("🚀 BERHASIL DITERBITKAN! Seluruh HP & tablet sekarang otomatis melihat data terbaru!");
+      } catch (err) {
+        console.error("Publish to GitHub failed:", err);
+        updateSyncStatusBadge('draft');
+        alert("Gagal menerbitkan ke GitHub: " + err.message + "\n\nPastikan koneksi internet aktif dan token GitHub valid.");
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>🚀 Terbitkan ke Semua Perangkat</span>`;
+        }
       }
-      return JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG));
     }
 
     function saveStoreConfig() {
@@ -4912,40 +5168,47 @@
       setVal('admWaTemplate', storeConfig.waTemplate || "");
       setVal('admInstagram', storeConfig.instagram || "@fflowerjuicee");
       setVal('admTiktok', storeConfig.tiktok || "flowerjuicee");
+      setVal('admGhToken', getGitHubToken() || "");
     }
 
     // Save Admin Changes
-    function saveAdminChanges() {
+    function saveAdminChanges(shouldToast = true) {
       // 1. Sync Active Product Form (Tab 1)
       syncCurrentAdminFormToMemory();
 
       // 2. Save Tab 2 (Hero)
-      const heroTitleVal = document.getElementById('admHeroTitle').value.trim();
-      if (heroTitleVal) storeConfig.heroTitle = heroTitleVal;
+      const heroTitleEl = document.getElementById('admHeroTitle');
+      if (heroTitleEl && heroTitleEl.value.trim()) storeConfig.heroTitle = heroTitleEl.value.trim();
       
-      const heroDescVal = document.getElementById('admHeroDesc').value.trim();
-      if (heroDescVal) storeConfig.heroDesc = heroDescVal;
+      const heroDescEl = document.getElementById('admHeroDesc');
+      if (heroDescEl && heroDescEl.value.trim()) storeConfig.heroDesc = heroDescEl.value.trim();
 
       // 3. Save Tab 3 (WhatsApp & Socials)
-      const waVal = document.getElementById('admWaNumber').value.trim();
-      if (waVal) storeConfig.waNumber = waVal;
+      const waEl = document.getElementById('admWaNumber');
+      if (waEl && waEl.value.trim()) storeConfig.waNumber = waEl.value.trim();
 
-      const waTplVal = document.getElementById('admWaTemplate').value.trim();
-      if (waTplVal) storeConfig.waTemplate = waTplVal;
+      const waTplEl = document.getElementById('admWaTemplate');
+      if (waTplEl && waTplEl.value.trim()) storeConfig.waTemplate = waTplEl.value.trim();
 
-      const igVal = document.getElementById('admInstagram').value.trim();
-      if (igVal) storeConfig.instagram = igVal;
+      const igEl = document.getElementById('admInstagram');
+      if (igEl && igEl.value.trim()) storeConfig.instagram = igEl.value.trim();
 
-      const ttVal = document.getElementById('admTiktok').value.trim();
-      if (ttVal) storeConfig.tiktok = ttVal;
+      const ttEl = document.getElementById('admTiktok');
+      if (ttEl && ttEl.value.trim()) storeConfig.tiktok = ttEl.value.trim();
 
-      // 4. Persist to localStorage
+      // 4. Mark local draft status & timestamp
+      storeConfig.updatedAt = new Date().toISOString();
+      updateSyncStatusBadge('draft');
+
+      // 5. Persist to localStorage
       saveStoreConfig();
 
-      // 5. Instantly apply changes to DOM!
+      // 6. Instantly apply changes to DOM!
       applyStoreConfig();
 
-      showToast("✓ Pengaturan toko berhasil disimpan & diterapkan!");
+      if (shouldToast) {
+        showToast("✓ Pengaturan tersimpan di perangkat ini! Klik 'Terbitkan' agar aktif di semua HP.");
+      }
     }
 
     // Change Admin PIN
@@ -5040,6 +5303,7 @@
     window.addEventListener('DOMContentLoaded', () => {
       applyStoreConfig();
       updateCartUI();
+      syncWithRemoteConfig();
     });
   </script>
 </body>
