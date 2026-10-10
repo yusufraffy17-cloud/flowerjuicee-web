@@ -48,7 +48,7 @@
       "slides": [
         "gelang_hand_cream_1_azure.jpg",
         "gelang_azure_real_kosmik_master.jpg",
-        "gelang_azure_brand_card_table.jpg"
+        "gelang_azure_card_clean.jpg"
       ],
       "stock": "ready",
       "gemColor": "#38bdf8",
@@ -73,7 +73,8 @@
       "imageHand": "gelang_hand_cream_2_amber.jpg",
       "slides": [
         "gelang_hand_cream_2_amber.jpg",
-        "gelang_amber_real_kosmik_master.jpg"
+        "gelang_amber_real_kosmik_master.jpg",
+        "gelang_amber_card_clean.jpg"
       ],
       "stock": "ready",
       "gemColor": "#fbbf24",
@@ -123,7 +124,8 @@
       "imageHand": "gelang_hand_cream_4_magenta.jpg",
       "slides": [
         "gelang_hand_cream_4_magenta.jpg",
-        "gelang_magenta_real_kosmik_master.jpg"
+        "gelang_magenta_real_kosmik_master.jpg",
+        "gelang_magenta_card_clean.jpg"
       ],
       "stock": "ready",
       "gemColor": "#e11d48",
@@ -148,7 +150,8 @@
       "imageHand": "gelang_hand_cream_5_violet.jpg",
       "slides": [
         "gelang_hand_cream_5_violet.jpg",
-        "gelang_violet_real_kosmik_master.jpg"
+        "gelang_violet_real_kosmik_master.jpg",
+        "gelang_violet_card_clean.jpg"
       ],
       "stock": "ready",
       "gemColor": "#9333ea",
@@ -173,7 +176,8 @@
       "imageHand": "gelang_hand_cream_6_lilac.jpg",
       "slides": [
         "gelang_hand_cream_6_lilac.jpg",
-        "gelang_real_kosmik_pure_master.jpg"
+        "gelang_real_kosmik_pure_master.jpg",
+        "gelang_lilac_card_clean.jpg"
       ],
       "stock": "ready",
       "gemColor": "#a855f7",
