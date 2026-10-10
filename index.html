@@ -1978,6 +1978,135 @@
       line-height: 1.2;
     }
 
+    /* Dynamic Slide Manager Styling */
+    .adm-slides-count-badge {
+      font-size: 0.72rem;
+      background: var(--bg-biscuit);
+      color: var(--choc-main);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      margin-left: auto;
+      border: 1px solid var(--border-lace);
+    }
+    .adm-slides-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .adm-slide-item {
+      background: var(--bg-cream);
+      border: 1.5px solid var(--border-lace);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 80px 1fr auto;
+      gap: 14px;
+      align-items: center;
+      transition: var(--transition);
+    }
+    .adm-slide-item:hover {
+      border-color: var(--choc-light);
+      box-shadow: 0 3px 10px rgba(92, 58, 33, 0.06);
+    }
+    .adm-slide-thumb-wrap {
+      width: 80px;
+      height: 70px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-lace);
+      background: #1e152d;
+      position: relative;
+    }
+    .adm-slide-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .adm-slide-thumb-badge {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      background: rgba(25, 16, 12, 0.75);
+      color: #fff;
+      font-size: 0.62rem;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .adm-slide-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .adm-slide-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+    }
+    .adm-btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border-lace);
+      background: #fff;
+      color: var(--choc-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .adm-btn-icon:hover:not(:disabled) {
+      background: var(--bg-biscuit);
+      border-color: var(--choc-main);
+      color: var(--choc-main);
+    }
+    .adm-btn-icon:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .adm-btn-icon.danger:hover:not(:disabled) {
+      background: #fee2e2;
+      border-color: #f87171;
+      color: #dc2626;
+    }
+    @media (max-width: 520px) {
+      .adm-slide-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      .adm-slide-thumb-wrap {
+        width: 100%;
+        height: 120px;
+      }
+      .adm-slide-actions {
+        flex-direction: row;
+        justify-content: flex-end;
+      }
+    }
+
+    /* Package Manager Styling */
+    .adm-pkgs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .adm-pkg-item {
+      background: var(--bg-cream);
+      border: 1.5px solid var(--border-lace);
+      border-radius: 12px;
+      padding: 14px 16px;
+      transition: var(--transition);
+    }
+    .adm-pkg-item:hover {
+      border-color: var(--choc-light);
+      box-shadow: 0 4px 12px rgba(92, 58, 33, 0.06);
+    }
+
+
     /* Drawer Footer (Sticky) */
     .admin-drawer-footer {
       padding: 18px 28px;
@@ -2330,7 +2459,7 @@
         </p>
       </div>
 
-      <div class="gift-tier-grid">
+      <div class="gift-tier-grid" id="giftTierGrid">
         <!-- Tier 1 -->
         <div class="tier-card">
           <div>
@@ -2523,7 +2652,6 @@
           <span>Masuk ke Panel Pengelola</span>
         </button>
       </form>
-      <div class="pin-hint-tag">Default PIN: <code>1234</code></div>
     </div>
   </div>
 
@@ -2554,6 +2682,9 @@
       <div class="admin-tabs-bar">
         <button class="admin-tab-btn active" data-tab="tab-product" onclick="switchAdminTab('tab-product')">
           <span>📦 Detail Gelang & Showcase</span>
+        </button>
+        <button class="admin-tab-btn" data-tab="tab-packages" onclick="switchAdminTab('tab-packages')">
+          <span>🎁 Paket Kemasan</span>
         </button>
         <button class="admin-tab-btn" data-tab="tab-hero" onclick="switchAdminTab('tab-hero')">
           <span>✍️ Jargon & Teks</span>
@@ -2672,38 +2803,131 @@
             </div>
           </div>
 
-          <!-- Card 4: Pengaturan Slider 2 Foto Gelang -->
+          <!-- Card 4: Pengelola Slide Foto Produk (Dynamic Slide Manager) -->
           <div class="adm-card">
             <div class="adm-card-title">
-              <span>🖼️ Pengaturan Slider 2 Foto Gelang</span>
+              <span>🖼️ Pengelola Slide Foto Produk</span>
+              <span class="adm-slides-count-badge" id="admSlidesCountBadge">2 Foto Aktif</span>
             </div>
-            <div style="font-size: 0.82rem; color: var(--choc-muted); margin-bottom: 12px;">
-              Setiap opsi gelang memiliki 2 foto (Foto 1: Sample Tangan & Foto 2: Detail Real Kosmik) yang dapat dislide di panggung showcase:
-            </div>
-
-            <div class="adm-form-row">
-              <div class="adm-form-group">
-                <label class="adm-label">Foto 1: Sample di Tangan <span class="adm-label-hint">Slide Pertama</span></label>
-                <input type="text" class="adm-input" id="admImgHand" placeholder="Contoh: gelang_hand_cream_1_azure.jpg">
-              </div>
-              <div class="adm-form-group">
-                <label class="adm-label">Foto 2: Detail Real Kosmik <span class="adm-label-hint">Slide Kedua</span></label>
-                <input type="text" class="adm-input" id="admImgMaster" placeholder="Contoh: gelang_azure_real_kosmik_master.jpg">
-              </div>
+            <div style="font-size: 0.82rem; color: var(--choc-muted); margin-bottom: 12px; line-height: 1.45;">
+              Atur foto yang tampil di slider panggung showcase. Anda dapat <b>mengganti foto</b>, <b>menambah slide foto baru</b>, <b>menghapus slide</b>, atau <b>menggeser urutan slide</b>:
             </div>
 
-            <div style="display: flex; gap: 8px; margin-top: 6px;">
-              <button type="button" class="btn btn-outline" style="padding: 6px 14px; font-size: 0.78rem;" onclick="swapAdminSlidePhotos()">
-                <span>⇄ Tukar Posisi Foto 1 & 2</span>
+            <!-- Dynamic Slides Container -->
+            <div class="adm-slides-list" id="admSlidesList">
+              <!-- Dynamically populated by renderAdminSlidesEditor -->
+            </div>
+
+            <!-- Action Buttons Bar -->
+            <div class="adm-slides-actions-bar" style="margin-top: 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.82rem; border-color: var(--choc-main); color: var(--choc-main); font-weight: 700;" onclick="addAdminSlide()">
+                <span>➕ Tambah Slide Foto Baru</span>
+              </button>
+              <button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 0.82rem;" onclick="reverseAdminSlidesOrder()">
+                <span>⇄ Balik Urutan Slide</span>
               </button>
             </div>
 
-            <!-- Preview 2 Foto Slider -->
-            <div class="adm-img-options-group" id="admImgOptionsGroup" style="margin-top: 14px;">
-              <!-- Dynamically populated per variant with Slide 1 & Slide 2 previews -->
+            <!-- Live Preview Strip -->
+            <div style="margin-top: 18px; border-top: 1px dashed var(--border-lace); padding-top: 14px;">
+              <div style="font-size: 0.76rem; font-weight: 700; color: var(--choc-dark); text-transform: uppercase; margin-bottom: 8px;">
+                Pratinjau Urutan Slide di Panggung:
+              </div>
+              <div class="adm-img-options-group" id="admImgOptionsGroup">
+                <!-- Dynamically populated per variant previews -->
+              </div>
             </div>
           </div>
 
+        </div>
+
+        <!-- TAB: PACKAGES & GIFT BOXES EDITOR -->
+        <div class="admin-tab-content" id="tab-packages">
+          <div class="adm-card">
+            <div class="adm-card-title">
+              <span>🎁 Manajemen Pilihan Kemasan & Gift Box</span>
+              <button type="button" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8rem; margin-left: auto;" onclick="openAddPackageForm()">
+                <span>➕ Tambah Paket Baru</span>
+              </button>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--choc-muted); margin-bottom: 16px; line-height: 1.45;">
+              Kelola paket gift box yang tampil di website. Anda dapat <b>mengedit harga</b>, <b>fitur kelengkapan</b>, <b>status rekomendasi (ribbon)</b>, <b>menambah paket baru</b>, atau <b>menghapus paket</b>:
+            </div>
+
+            <!-- List of packages in admin -->
+            <div class="adm-pkgs-list" id="admPackagesList">
+              <!-- Dynamically populated package cards -->
+            </div>
+          </div>
+
+          <!-- Package Editor Form Sub-panel -->
+          <div class="adm-pkg-editor-panel" id="admPkgEditorPanel" style="display: none;">
+            <div class="adm-card" style="border: 2px solid var(--caramel-gold); background: #FFFDF9;">
+              <div class="adm-card-title">
+                <span id="admPkgEditorTitle">✏️ Edit Paket Kemasan</span>
+                <button type="button" class="btn-admin-close" style="width: 28px; height: 28px; font-size: 1rem; margin-left: auto;" onclick="closePackageEditForm()">&times;</button>
+              </div>
+
+              <input type="hidden" id="admPkgId">
+
+              <div class="adm-form-row">
+                <div class="adm-form-group">
+                  <label class="adm-label">Nama Paket <span class="adm-label-hint">Contoh: Signature Gift Box</span></label>
+                  <input type="text" class="adm-input" id="admPkgName" placeholder="Nama Paket">
+                </div>
+                <div class="adm-form-group">
+                  <label class="adm-label">Label Tier / Badge <span class="adm-label-hint">Badge kecil di atas</span></label>
+                  <input type="text" class="adm-input" id="admPkgTierLabel" placeholder="Contoh: Tier 2 · Best Seller">
+                </div>
+              </div>
+
+              <div class="adm-form-row">
+                <div class="adm-form-group">
+                  <label class="adm-label">Teks Tampilan Harga <span class="adm-label-hint">Teks di kartu</span></label>
+                  <input type="text" class="adm-input" id="admPkgPriceDisplay" placeholder="Contoh: Rp 89.000 – 119.000">
+                </div>
+                <div class="adm-form-group">
+                  <label class="adm-label">Nominal Order Keranjang (Rp) <span class="adm-label-hint">Hitungan checkout WA</span></label>
+                  <input type="number" class="adm-input" id="admPkgOrderPrice" placeholder="119000" min="1000" step="1000">
+                </div>
+              </div>
+
+              <div class="adm-form-group">
+                <label class="adm-label">Deskripsi Ringkas Paket</label>
+                <textarea class="adm-textarea" id="admPkgDesc" rows="2" placeholder="Deskripsi paket..."></textarea>
+              </div>
+
+              <div class="adm-form-group">
+                <label class="adm-label">Daftar Fitur / Isi Paket (Checklist) <span class="adm-label-hint">Tulis 1 item per baris</span></label>
+                <textarea class="adm-textarea" id="admPkgFeatures" rows="5" placeholder="1x Gelang Pilihan The Celestial Blooms&#10;Hardbox pita satin ungu & emas mewah&#10;Bantalan beludru perhiasan eksklusif&#10;Printable Story Card Karakter Puitis&#10;Free Handwritten Love Letter Card"></textarea>
+                <div style="font-size: 0.72rem; color: var(--choc-muted); margin-top: 3px;">Tiap baris teks akan otomatis diberi ikon centang ✓ di halaman utama.</div>
+              </div>
+
+              <div class="adm-form-row">
+                <div class="adm-form-group">
+                  <label class="adm-label">Jadikan Paket Rekomendasi (Featured)?</label>
+                  <select class="adm-select" id="admPkgFeatured" onchange="toggleRibbonInput(this.value)">
+                    <option value="false">Tidak (Tampilan Standar)</option>
+                    <option value="true">⭐ Ya, Rekomendasi (Border Emas & Pita)</option>
+                  </select>
+                </div>
+                <div class="adm-form-group" id="admRibbonGroup">
+                  <label class="adm-label">Teks Pita Ribbon <span class="adm-label-hint">Jika rekomendasi</span></label>
+                  <input type="text" class="adm-input" id="admPkgRibbon" placeholder="Paling Banyak Dipilih">
+                </div>
+              </div>
+
+              <div class="adm-form-group">
+                <label class="adm-label">Teks Tombol Pesan</label>
+                <input type="text" class="adm-input" id="admPkgBtnText" placeholder="Contoh: Pilih Signature Gift Box">
+              </div>
+
+              <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
+                <button type="button" class="btn btn-outline" style="padding: 8px 18px; font-size: 0.85rem;" onclick="closePackageEditForm()">Batal</button>
+                <button type="button" class="btn btn-primary" style="padding: 8px 22px; font-size: 0.85rem;" onclick="savePackageFromForm()">💾 Simpan Paket</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- TAB 2: HERO & TEXT CONTENT -->
@@ -2818,7 +3042,7 @@
   <script>
     // --- 1. DEFAULT DATA CONFIGURATION (FLOWERJUICEE STOREFRONT) ---
     const DEFAULT_STORE_CONFIG = {
-      // SHA-256 for default PIN "1234"
+      // Initial administrator authentication credential digest
       pinHash: "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
       heroTitle: "Made by hand, chosen by you.",
       heroDesc: "Explore our collection of handmade jewelry and find the pieces that suit your style. Choose your favorites, and place your order today. Happy shopping♡",
@@ -2841,6 +3065,10 @@
         priceBadge: "Termasuk Exclusive Wooden Box & Pouch",
         image: "seven_celestial_blooms_real_master.jpg",
         imageHand: "seven_celestial_blooms_refined_masterpiece.jpg",
+        slides: [
+          "seven_celestial_blooms_refined_masterpiece.jpg",
+          "seven_celestial_blooms_real_master.jpg"
+        ],
         stock: "ready",
         bgGradient: "radial-gradient(circle at 50% 30%, #291c42 0%, #171126 60%, #0d0917 100%)"
       },
@@ -2861,6 +3089,10 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_azure_real_kosmik_master.jpg",
           imageHand: "gelang_hand_cream_1_azure.jpg",
+          slides: [
+            "gelang_hand_cream_1_azure.jpg",
+            "gelang_azure_real_kosmik_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#38bdf8",
           bgGradient: "radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 60%, #080d1a 100%)",
@@ -2882,6 +3114,10 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_amber_real_kosmik_master.jpg",
           imageHand: "gelang_hand_cream_2_amber.jpg",
+          slides: [
+            "gelang_hand_cream_2_amber.jpg",
+            "gelang_amber_real_kosmik_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#fbbf24",
           bgGradient: "radial-gradient(circle at 50% 30%, #3b2810 0%, #1c1408 60%, #0c0803 100%)",
@@ -2903,6 +3139,10 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_sakura_real_kosmik_master.jpg",
           imageHand: "gelang_hand_cream_3_sakura.jpg",
+          slides: [
+            "gelang_hand_cream_3_sakura.jpg",
+            "gelang_sakura_real_kosmik_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#f472b6",
           bgGradient: "radial-gradient(circle at 50% 30%, #36172a 0%, #1f0d19 60%, #0f060c 100%)",
@@ -2924,6 +3164,10 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_magenta_real_kosmik_master.jpg",
           imageHand: "gelang_hand_cream_4_magenta.jpg",
+          slides: [
+            "gelang_hand_cream_4_magenta.jpg",
+            "gelang_magenta_real_kosmik_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#e11d48",
           bgGradient: "radial-gradient(circle at 50% 30%, #3a0d24 0%, #1e0612 60%, #0f0309 100%)",
@@ -2945,6 +3189,10 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_violet_real_kosmik_master.jpg",
           imageHand: "gelang_hand_cream_5_violet.jpg",
+          slides: [
+            "gelang_hand_cream_5_violet.jpg",
+            "gelang_violet_real_kosmik_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#9333ea",
           bgGradient: "radial-gradient(circle at 50% 30%, #29153d 0%, #170b24 60%, #0b0512 100%)",
@@ -2966,6 +3214,10 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_real_kosmik_pure_master.jpg",
           imageHand: "gelang_hand_cream_6_lilac.jpg",
+          slides: [
+            "gelang_hand_cream_6_lilac.jpg",
+            "gelang_real_kosmik_pure_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#a855f7",
           bgGradient: "radial-gradient(circle at 50% 30%, #201c3d 0%, #100e21 60%, #080712 100%)",
@@ -2987,10 +3239,70 @@
           priceBadge: "Termasuk Fabric Pouch",
           image: "gelang_glacial_real_kosmik_master.jpg",
           imageHand: "gelang_hand_cream_7_aqua.jpg",
+          slides: [
+            "gelang_hand_cream_7_aqua.jpg",
+            "gelang_glacial_real_kosmik_master.jpg"
+          ],
           stock: "ready",
           gemColor: "#38bdf8",
           bgGradient: "radial-gradient(circle at 50% 30%, #102636 0%, #08151f 60%, #04090f 100%)",
           desc: "Bunga es kosmik yang mekar di pagi musim dingin. Menghadirkan kesejukan murni, ketulusan tanpa syarat, dan rasa damai sejernih embun."
+        }
+      ],
+      packages: [
+        {
+          id: "pkg-1",
+          tierLabel: "Tier 1 · Everyday",
+          name: "Single Essential",
+          priceDisplay: "Rp 49.000 – 59.000",
+          orderPrice: 59000,
+          description: "Pilihan manis untuk pemakaian pribadi harian atau kado sederhana.",
+          features: [
+            "1x Gelang Pilihan dari 7 varian",
+            "Fabric Pouch serut katun cantik",
+            "Kartu ucapan terima kasih standar",
+            "Kemasan aman bubble wrap tebal"
+          ],
+          isFeatured: false,
+          ribbonText: "",
+          btnText: "Pilih Kemasan Ini"
+        },
+        {
+          id: "pkg-2",
+          tierLabel: "Tier 2 · Best Seller",
+          name: "Signature Gift Box",
+          priceDisplay: "Rp 89.000 – 119.000",
+          orderPrice: 119000,
+          description: "Paket kado romantis paling dicari para cowok untuk anniversary & ultah pacar.",
+          features: [
+            "1x Gelang Pilihan The Celestial Blooms",
+            "Hardbox pita satin ungu & emas mewah",
+            "Bantalan beludru perhiasan eksklusif",
+            "Printable Story Card Karakter Puitis",
+            "Free Handwritten Love Letter Card",
+            "Mini buket bunga kering alami"
+          ],
+          isFeatured: true,
+          ribbonText: "Paling Banyak Dipilih",
+          btnText: "Pilih Signature Gift Box"
+        },
+        {
+          id: "pkg-3",
+          tierLabel: "Tier 3 · Ultimate Collection",
+          name: "Lucky Seven Vault",
+          priceDisplay: "Rp 399.000 – 499.000",
+          orderPrice: 499000,
+          description: "Kotak kolektor lengkap berisi ketujuh gelang The Celestial Blooms.",
+          features: [
+            "Semua 7 Gelang Semesta Lengkap",
+            "Kotak kolektor kayu/beludru ungu agung",
+            "Lengkap 7 Story Card Karakter",
+            "Sertifikat keaslian edisi 2026",
+            "Signature floral mist perfume"
+          ],
+          isFeatured: false,
+          ribbonText: "",
+          btnText: "Pilih Edisi Kolektor"
         }
       ]
     };
@@ -3009,7 +3321,24 @@
         const saved = localStorage.getItem('flowerjuicee_store_config');
         if (saved) {
           const parsed = JSON.parse(saved);
-          return { ...DEFAULT_STORE_CONFIG, ...parsed, variants: parsed.variants || DEFAULT_STORE_CONFIG.variants };
+          const cfg = { ...DEFAULT_STORE_CONFIG, ...parsed, variants: parsed.variants || DEFAULT_STORE_CONFIG.variants };
+          // Ensure slides exist on each variant
+          cfg.variants.forEach((v, idx) => {
+            const defV = DEFAULT_STORE_CONFIG.variants[idx] || {};
+            if (!v.slides || !Array.isArray(v.slides) || v.slides.length === 0) {
+              v.slides = [v.imageHand || defV.imageHand, v.image || defV.image].filter(Boolean);
+              if (v.slides.length === 0) v.slides = ["gelang_hand_cream_1_azure.jpg"];
+            }
+          });
+          if (cfg.masterFrame) {
+            if (!cfg.masterFrame.slides || !Array.isArray(cfg.masterFrame.slides) || cfg.masterFrame.slides.length === 0) {
+              cfg.masterFrame.slides = [cfg.masterFrame.imageHand || DEFAULT_STORE_CONFIG.masterFrame.imageHand, cfg.masterFrame.image || DEFAULT_STORE_CONFIG.masterFrame.image].filter(Boolean);
+            }
+          }
+          if (!cfg.packages || !Array.isArray(cfg.packages) || cfg.packages.length === 0) {
+            cfg.packages = JSON.parse(JSON.stringify(DEFAULT_STORE_CONFIG.packages));
+          }
+          return cfg;
         }
       } catch (e) {
         console.error("Error loading config:", e);
@@ -3070,6 +3399,7 @@
         selectVariant(currentSelectedVariant);
       }
       renderCatalog();
+      renderStorefrontPackages();
     }
 
     // --- 4. CELESTIAL STAGE DISPLAY ---
@@ -3093,57 +3423,122 @@
       });
     }
 
-    // --- 4. CELESTIAL STAGE 2-PHOTO SLIDER ---
+    // --- 4. CELESTIAL STAGE DYNAMIC SLIDER ---
     let currentStageSlideIndex = 0;
+    let currentStageSlides = [];
+
+    function updateStageSlider(slides, altPrefix, isMaster) {
+      currentStageSlides = (slides && slides.length > 0) ? slides : ["gelang_hand_cream_1_azure.jpg"];
+      currentStageSlideIndex = 0;
+
+      const track = document.getElementById('stageSliderTrack');
+      const indicators = document.getElementById('stageSlideIndicators');
+      const prevBtn = document.getElementById('stageSlidePrevBtn');
+      const nextBtn = document.getElementById('stageSlideNextBtn');
+
+      if (!track) return;
+      track.innerHTML = "";
+
+      const total = currentStageSlides.length;
+      track.style.width = `${total * 100}%`;
+
+      currentStageSlides.forEach((src, idx) => {
+        const slideEl = document.createElement('div');
+        slideEl.className = 'stage-slide';
+        slideEl.style.width = `${100 / total}%`;
+
+        let slideAlt = `${altPrefix} - Foto ${idx + 1}`;
+        if (idx === 0) slideAlt = `${altPrefix} - Sample Pemakaian di Tangan`;
+        else if (idx === 1) slideAlt = `${altPrefix} - Detail Kosmik Master`;
+
+        slideEl.innerHTML = `
+          <img class="stage-visual-img" src="${src}" alt="${slideAlt}" loading="${idx === 0 ? 'eager' : 'lazy'}" onerror="this.src='brand_card_flowerjuicee.jpg'">
+        `;
+        track.appendChild(slideEl);
+      });
+
+      // Update Navigation Arrows visibility
+      if (prevBtn && nextBtn) {
+        if (total <= 1) {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+        } else {
+          prevBtn.style.display = 'flex';
+          nextBtn.style.display = 'flex';
+        }
+      }
+
+      // Render Dots / Indicator Pills
+      if (indicators) {
+        if (total <= 1) {
+          indicators.style.display = 'none';
+        } else {
+          indicators.style.display = 'flex';
+          indicators.innerHTML = "";
+          for (let i = 0; i < total; i++) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = `slide-dot-btn ${i === 0 ? 'active' : ''}`;
+            btn.id = `slideDot${i}`;
+            btn.onclick = () => setStageSlide(i);
+            btn.innerHTML = `
+              <span class="slide-dot-dot"></span>
+              <span>${i + 1}</span>
+            `;
+            indicators.appendChild(btn);
+          }
+        }
+      }
+
+      setStageSlide(0);
+    }
 
     function setStageSlide(index) {
-      currentStageSlideIndex = (index === 1) ? 1 : 0;
+      const total = currentStageSlides.length || 1;
+      if (index < 0) index = 0;
+      if (index >= total) index = total - 1;
+      currentStageSlideIndex = index;
+
       const track = document.getElementById('stageSliderTrack');
       if (track) {
-        track.style.transform = `translateX(-${currentStageSlideIndex * 50}%)`;
+        const shiftPct = currentStageSlideIndex * (100 / total);
+        track.style.transform = `translateX(-${shiftPct}%)`;
       }
 
       // Update Slide Badge
       const badge = document.getElementById('stageSlideBadge');
       if (badge) {
+        let label = "Detail Produk";
         if (isMasterViewActive) {
-          badge.innerHTML = currentStageSlideIndex === 0 
-            ? `<span>👑 1 / 2 • Formasi Lingkaran</span>` 
-            : `<span>👑 2 / 2 • Formasi Lengkap</span>`;
+          if (currentStageSlideIndex === 0) label = "Formasi Lingkaran";
+          else if (currentStageSlideIndex === 1) label = "Formasi Lengkap";
+          else label = `Detail Orbit #${currentStageSlideIndex + 1}`;
+          badge.innerHTML = `<span>👑 ${currentStageSlideIndex + 1} / ${total} • ${label}</span>`;
         } else {
-          badge.innerHTML = currentStageSlideIndex === 0 
-            ? `<span>📷 1 / 2 • Sample Tangan</span>` 
-            : `<span>📷 2 / 2 • Detail Produk</span>`;
+          if (currentStageSlideIndex === 0) label = "Sample di Tangan";
+          else if (currentStageSlideIndex === 1) label = "Detail Real Kosmik";
+          else label = `Detail Foto #${currentStageSlideIndex + 1}`;
+          badge.innerHTML = `<span>📷 ${currentStageSlideIndex + 1} / ${total} • ${label}</span>`;
         }
       }
 
       // Update Dot Buttons
-      const dot0 = document.getElementById('slideDot0');
-      const dot1 = document.getElementById('slideDot1');
-      if (dot0) dot0.classList.toggle('active', currentStageSlideIndex === 0);
-      if (dot1) dot1.classList.toggle('active', currentStageSlideIndex === 1);
+      for (let i = 0; i < total; i++) {
+        const dot = document.getElementById(`slideDot${i}`);
+        if (dot) dot.classList.toggle('active', i === currentStageSlideIndex);
+      }
     }
 
     function nextStageSlide() {
-      setStageSlide((currentStageSlideIndex + 1) % 2);
+      const total = currentStageSlides.length || 1;
+      if (total <= 1) return;
+      setStageSlide((currentStageSlideIndex + 1) % total);
     }
 
     function prevStageSlide() {
-      setStageSlide((currentStageSlideIndex === 0) ? 1 : 0);
-    }
-
-    function updateStageSliderImages(img1, img2, altPrefix) {
-      const slideImg1 = document.getElementById('stageSlideImg1');
-      const slideImg2 = document.getElementById('stageSlideImg2');
-      if (slideImg1) {
-        slideImg1.src = img1 || 'gelang_hand_cream_1_azure.jpg';
-        slideImg1.alt = `${altPrefix} - Sample Pemakaian di Tangan`;
-      }
-      if (slideImg2) {
-        slideImg2.src = img2 || 'gelang_azure_real_kosmik_master.jpg';
-        slideImg2.alt = `${altPrefix} - Detail Real Kosmik`;
-      }
-      setStageSlide(0); // Reset ke foto pertama saat berganti varian
+      const total = currentStageSlides.length || 1;
+      if (total <= 1) return;
+      setStageSlide((currentStageSlideIndex - 1 + total) % total);
     }
 
     function selectVariant(v) {
@@ -3155,10 +3550,9 @@
         btn.classList.toggle('active', celestialVariants[idx] && celestialVariants[idx].id === v.id);
       });
 
-      // Update 2-Photo Slider
-      const photo1 = v.imageHand || v.image;
-      const photo2 = v.image || v.imageHand;
-      updateStageSliderImages(photo1, photo2, v.name);
+      // Update Dynamic Slider
+      const slides = (v.slides && v.slides.length > 0) ? v.slides : [v.imageHand, v.image].filter(Boolean);
+      updateStageSlider(slides, v.name, false);
 
       // Update Texts & Badges
       const symBadge = document.getElementById('stageSymbolBadge');
@@ -3247,9 +3641,10 @@
 
     function renderMasterStage() {
       isMasterViewActive = true;
-      const mPhoto1 = masterFrameData.image || "seven_celestial_blooms_real_master.jpg";
-      const mPhoto2 = masterFrameData.imageHand || "seven_celestial_blooms_refined_masterpiece.jpg";
-      updateStageSliderImages(mPhoto1, mPhoto2, masterFrameData.name);
+      const mSlides = (masterFrameData.slides && masterFrameData.slides.length > 0) 
+        ? masterFrameData.slides 
+        : [masterFrameData.imageHand || "seven_celestial_blooms_refined_masterpiece.jpg", masterFrameData.image || "seven_celestial_blooms_real_master.jpg"].filter(Boolean);
+      updateStageSlider(mSlides, masterFrameData.name, true);
 
       const symBadge = document.getElementById('stageSymbolBadge');
       if (symBadge) symBadge.textContent = masterFrameData.symbol;
@@ -3509,8 +3904,9 @@
     }
 
     function selectTierOrder(tierName, price) {
+      const tierKey = tierName.toLowerCase().replace(/[^a-z0-9]/g, '-');
       addToCart({
-        id: `tier-${Date.now()}`,
+        id: `tier-${tierKey}`,
         name: `Paket ${tierName}`,
         price: price,
         image: "brand_card_flowerjuicee.jpg"
@@ -3766,6 +4162,7 @@
     function openAdminDrawer() {
       populateProductPicker();
       loadProductToAdminForm(currentlyEditingProductId);
+      renderAdminPackages();
       loadHeroAndSettingsToAdminForm();
       if (adminDrawerBackdrop) adminDrawerBackdrop.classList.add('active');
     }
@@ -3798,6 +4195,9 @@
       document.querySelectorAll('.admin-tab-content').forEach(content => {
         content.classList.toggle('active', content.id === tabId);
       });
+      if (tabId === 'tab-packages') {
+        renderAdminPackages();
+      }
     }
 
     // Populate Product Picker
@@ -3853,12 +4253,20 @@
         const stockEl = document.getElementById('admStock');
         if (stockEl) p.stock = stockEl.value;
 
-        const imgHandVal = getVal('admImgHand');
-        if (imgHandVal) p.imageHand = imgHandVal;
-
-        const imgMasterVal = getVal('admImgMaster');
-        if (imgMasterVal) p.image = imgMasterVal;
+        // Slides array is authoritative!
+        if (p.slides && p.slides.length > 0) {
+          p.imageHand = p.slides[0];
+          p.image = p.slides[1] || p.slides[0];
+        }
       }
+    }
+
+    function getCurrentlyEditingProduct() {
+      let p = celestialVariants.find(v => v.id === currentlyEditingProductId);
+      if (!p && (currentlyEditingProductId === 'master-frame' || currentlyEditingProductId === masterFrameData.id)) {
+        p = masterFrameData;
+      }
+      return p || celestialVariants[0];
     }
 
     // Load Product to Tab 1 Form
@@ -3893,52 +4301,380 @@
       setVal('admPriceBadge', p.priceBadge || "Termasuk Fabric Pouch");
       setVal('admStock', p.stock || "ready");
 
-      setVal('admImgHand', p.imageHand || "");
-      setVal('admImgMaster', p.image || "");
+      // Ensure slides array exists
+      if (!p.slides || !Array.isArray(p.slides) || p.slides.length === 0) {
+        p.slides = [p.imageHand || "gelang_hand_cream_1_azure.jpg", p.image || "gelang_azure_real_kosmik_master.jpg"].filter(Boolean);
+      }
 
-      // Render Visual Image Choice Cards
+      // Render Dynamic Slides in Admin Form
+      renderAdminSlidesEditor(p);
+    }
+
+    function renderAdminSlidesEditor(p) {
+      if (!p) p = getCurrentlyEditingProduct();
+      if (!p) return;
+
+      if (!p.slides || !Array.isArray(p.slides) || p.slides.length === 0) {
+        p.slides = [p.imageHand || "gelang_hand_cream_1_azure.jpg", p.image || "gelang_azure_real_kosmik_master.jpg"].filter(Boolean);
+      }
+
+      const listEl = document.getElementById('admSlidesList');
+      const countBadge = document.getElementById('admSlidesCountBadge');
+      if (countBadge) countBadge.textContent = `${p.slides.length} Foto Aktif`;
+
+      if (listEl) {
+        listEl.innerHTML = "";
+        p.slides.forEach((slideSrc, idx) => {
+          const itemEl = document.createElement('div');
+          itemEl.className = "adm-slide-item";
+          
+          const isFirst = idx === 0;
+          const isLast = idx === p.slides.length - 1;
+          const canDelete = p.slides.length > 1;
+
+          itemEl.innerHTML = `
+            <div class="adm-slide-thumb-wrap">
+              <img class="adm-slide-thumb" src="${slideSrc}" alt="Slide ${idx + 1}" onerror="this.src='brand_card_flowerjuicee.jpg'">
+              <span class="adm-slide-thumb-badge">#${idx + 1}</span>
+            </div>
+            <div class="adm-slide-inputs">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <label style="font-size:0.75rem; font-weight:700; color:var(--choc-dark);">
+                  Slide ${idx + 1} ${idx === 0 ? '<span style="color:#15803d; font-size:0.68rem;">(Foto Utama)</span>' : ''}
+                </label>
+              </div>
+              <input type="text" class="adm-input" value="${slideSrc}" placeholder="URL atau nama file foto" oninput="updateAdminSlideUrl(${idx}, this.value)" style="font-size:0.82rem; padding:6px 10px;">
+            </div>
+            <div class="adm-slide-actions">
+              <button type="button" class="adm-btn-icon" title="Geser ke Atas" ${isFirst ? 'disabled' : ''} onclick="moveAdminSlide(${idx}, -1)">▲</button>
+              <button type="button" class="adm-btn-icon" title="Geser ke Bawah" ${isLast ? 'disabled' : ''} onclick="moveAdminSlide(${idx}, 1)">▼</button>
+              <button type="button" class="adm-btn-icon danger" title="Hapus Slide Ini" ${canDelete ? '' : 'disabled'} onclick="removeAdminSlide(${idx})">🗑️</button>
+            </div>
+          `;
+          listEl.appendChild(itemEl);
+        });
+      }
+
+      // Also update preview strip
       renderAdminImageChoices(p);
     }
 
-    function swapAdminSlidePhotos() {
-      const inputHand = document.getElementById('admImgHand');
-      const inputMaster = document.getElementById('admImgMaster');
-      if (inputHand && inputMaster) {
-        const temp = inputHand.value;
-        inputHand.value = inputMaster.value;
-        inputMaster.value = temp;
-
-        let p = celestialVariants.find(v => v.id === currentlyEditingProductId);
-        if (!p && (currentlyEditingProductId === 'master-frame' || currentlyEditingProductId === masterFrameData.id)) {
-          p = masterFrameData;
-        }
-        if (p) {
-          p.imageHand = inputHand.value;
-          p.image = inputMaster.value;
-          renderAdminImageChoices(p);
-        }
-        showToast("⇄ Posisi Foto 1 dan Foto 2 berhasil ditukar!");
+    function updateAdminSlideUrl(idx, newUrl) {
+      const p = getCurrentlyEditingProduct();
+      if (p && p.slides && p.slides[idx] !== undefined) {
+        p.slides[idx] = newUrl.trim();
+        if (idx === 0) p.imageHand = newUrl.trim();
+        if (idx === 1) p.image = newUrl.trim();
+        
+        // Update live preview thumbnail in item
+        const thumbs = document.querySelectorAll('.adm-slide-thumb');
+        if (thumbs[idx]) thumbs[idx].src = newUrl.trim();
+        renderAdminImageChoices(p);
       }
+    }
+
+    function addAdminSlide() {
+      const p = getCurrentlyEditingProduct();
+      if (p) {
+        if (!p.slides) p.slides = [];
+        const defaultPlaceholder = "gelang_azure_real_kosmik_master.jpg";
+        p.slides.push(defaultPlaceholder);
+        renderAdminSlidesEditor(p);
+        showToast(`➕ Slide ke-${p.slides.length} berhasil ditambahkan! Silakan ubah URL/nama fotonya.`);
+      }
+    }
+
+    function removeAdminSlide(idx) {
+      const p = getCurrentlyEditingProduct();
+      if (p && p.slides && p.slides.length > 1) {
+        if (confirm(`Hapus slide ke-${idx + 1} dari produk ini?`)) {
+          p.slides.splice(idx, 1);
+          if (p.slides[0]) p.imageHand = p.slides[0];
+          if (p.slides[1]) p.image = p.slides[1];
+          renderAdminSlidesEditor(p);
+          showToast("🗑️ Slide berhasil dihapus.");
+        }
+      } else {
+        alert("Produk minimal harus memiliki 1 slide foto!");
+      }
+    }
+
+    function moveAdminSlide(idx, direction) {
+      const p = getCurrentlyEditingProduct();
+      if (!p || !p.slides) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= p.slides.length) return;
+
+      const temp = p.slides[idx];
+      p.slides[idx] = p.slides[targetIdx];
+      p.slides[targetIdx] = temp;
+
+      if (p.slides[0]) p.imageHand = p.slides[0];
+      if (p.slides[1]) p.image = p.slides[1];
+
+      renderAdminSlidesEditor(p);
+      showToast("⇄ Urutan slide berhasil diubah!");
+    }
+
+    function reverseAdminSlidesOrder() {
+      const p = getCurrentlyEditingProduct();
+      if (!p || !p.slides || p.slides.length < 2) return;
+      p.slides.reverse();
+      if (p.slides[0]) p.imageHand = p.slides[0];
+      if (p.slides[1]) p.image = p.slides[1];
+      renderAdminSlidesEditor(p);
+      showToast("⇄ Urutan semua slide berhasil dibalik!");
     }
 
     function renderAdminImageChoices(p) {
       const group = document.getElementById('admImgOptionsGroup');
-      if (!group) return;
+      if (!group || !p) return;
       group.innerHTML = "";
 
-      const slides = [
-        { label: "Slide 1: Di Tangan", src: p.imageHand || "gelang_hand_cream_1_azure.jpg" },
-        { label: "Slide 2: Detail Real Kosmik", src: p.image || "gelang_azure_real_kosmik_master.jpg" }
-      ];
+      const slides = p.slides && p.slides.length > 0 
+        ? p.slides 
+        : [p.imageHand || "gelang_hand_cream_1_azure.jpg", p.image || "gelang_azure_real_kosmik_master.jpg"];
 
-      slides.forEach(item => {
+      slides.forEach((src, idx) => {
         const card = document.createElement('div');
         card.className = "adm-img-card selected";
         card.innerHTML = `
-          <img class="adm-img-preview" src="${item.src}" alt="${item.label}">
-          <span class="adm-img-label">${item.label}</span>
+          <img class="adm-img-preview" src="${src}" alt="Slide ${idx + 1}" onerror="this.src='brand_card_flowerjuicee.jpg'">
+          <span class="adm-img-label">Slide ${idx + 1}${idx === 0 ? ' (Utama)' : ''}</span>
         `;
         group.appendChild(card);
+      });
+    }
+
+    // --- PACKAGE MANAGER LOGIC (CRUD PACKAGES) ---
+    function renderAdminPackages() {
+      const listEl = document.getElementById('admPackagesList');
+      if (!listEl) return;
+      listEl.innerHTML = "";
+
+      const pkgs = storeConfig.packages || [];
+      if (pkgs.length === 0) {
+        listEl.innerHTML = `<div style="text-align:center; padding:20px; color:var(--choc-muted); font-size:0.85rem;">Belum ada paket kemasan. Klik tombol "+ Tambah Paket Baru" di atas.</div>`;
+        return;
+      }
+
+      pkgs.forEach((pkg, idx) => {
+        const card = document.createElement('div');
+        card.className = "adm-pkg-item";
+        card.style.cssText = "background: var(--bg-cream); border: 1.5px solid var(--border-lace); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px;";
+
+        const isFirst = idx === 0;
+        const isLast = idx === pkgs.length - 1;
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+            <div style="flex: 1;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap;">
+                <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; background: ${pkg.isFeatured ? '#fef3c7; color:#92400e;' : 'var(--bg-biscuit); color:var(--choc-main);'} font-weight: 700;">
+                  ${pkg.tierLabel || 'Tier Kemasan'}
+                </span>
+                ${pkg.isFeatured ? `<span style="font-size: 0.72rem; color: #b45309; font-weight: 700; background:#fef3c7; padding:2px 8px; border-radius:12px;">⭐ ${pkg.ribbonText || 'Paling Banyak Dipilih'}</span>` : ''}
+              </div>
+              <div style="font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--choc-dark);">
+                ${pkg.name}
+              </div>
+              <div style="font-size: 0.85rem; font-weight: 700; color: var(--caramel-gold); margin-top: 2px;">
+                ${pkg.priceDisplay} <span style="font-size: 0.74rem; color: var(--choc-muted); font-weight: normal;">(Nominal order: Rp ${Number(pkg.orderPrice || 0).toLocaleString('id-ID')})</span>
+              </div>
+              <div style="font-size: 0.78rem; color: var(--choc-muted); margin-top: 4px;">
+                ${pkg.description || ''}
+              </div>
+              <div style="font-size: 0.72rem; color: var(--choc-main); margin-top: 6px;">
+                ✓ ${(pkg.features || []).length} fitur kelengkapan terdaftar
+              </div>
+            </div>
+            <div style="display: flex; gap: 6px; flex-shrink: 0;">
+              <button type="button" class="adm-btn-icon" title="Geser ke Atas" ${isFirst ? 'disabled' : ''} onclick="movePackageOrder(${idx}, -1)">▲</button>
+              <button type="button" class="adm-btn-icon" title="Geser ke Bawah" ${isLast ? 'disabled' : ''} onclick="movePackageOrder(${idx}, 1)">▼</button>
+              <button type="button" class="adm-btn-icon" title="Edit Paket" onclick="openEditPackageForm('${pkg.id}')">✏️</button>
+              <button type="button" class="adm-btn-icon danger" title="Hapus Paket" onclick="deletePackage('${pkg.id}')">🗑️</button>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(card);
+      });
+    }
+
+    function toggleRibbonInput(val) {
+      const group = document.getElementById('admRibbonGroup');
+      if (group) {
+        group.style.opacity = (val === 'true') ? '1' : '0.4';
+      }
+    }
+
+    function openAddPackageForm() {
+      document.getElementById('admPkgEditorTitle').textContent = "➕ Tambah Paket Kemasan Baru";
+      document.getElementById('admPkgId').value = `pkg-${Date.now()}`;
+      document.getElementById('admPkgName').value = "";
+      document.getElementById('admPkgTierLabel').value = "Tier Baru · Spesial";
+      document.getElementById('admPkgPriceDisplay').value = "Rp 99.000";
+      document.getElementById('admPkgOrderPrice').value = "99000";
+      document.getElementById('admPkgDesc').value = "";
+      document.getElementById('admPkgFeatures').value = "1x Gelang Pilihan The Celestial Blooms\nHardbox kemasan mewah\nKartu ucapan cinta\nKemasan aman bubble wrap";
+      document.getElementById('admPkgFeatured').value = "false";
+      document.getElementById('admPkgRibbon').value = "Edisi Terbatas";
+      document.getElementById('admPkgBtnText').value = "Pilih Paket Ini";
+      toggleRibbonInput("false");
+      
+      const panel = document.getElementById('admPkgEditorPanel');
+      if (panel) {
+        panel.style.display = "block";
+        panel.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function openEditPackageForm(pkgId) {
+      const pkg = (storeConfig.packages || []).find(p => p.id === pkgId);
+      if (!pkg) return;
+
+      document.getElementById('admPkgEditorTitle').textContent = `✏️ Edit Paket: ${pkg.name}`;
+      document.getElementById('admPkgId').value = pkg.id;
+      document.getElementById('admPkgName').value = pkg.name || "";
+      document.getElementById('admPkgTierLabel').value = pkg.tierLabel || "";
+      document.getElementById('admPkgPriceDisplay').value = pkg.priceDisplay || "";
+      document.getElementById('admPkgOrderPrice').value = pkg.orderPrice || 0;
+      document.getElementById('admPkgDesc').value = pkg.description || "";
+      document.getElementById('admPkgFeatures').value = (pkg.features || []).join('\n');
+      document.getElementById('admPkgFeatured').value = pkg.isFeatured ? "true" : "false";
+      document.getElementById('admPkgRibbon').value = pkg.ribbonText || "";
+      document.getElementById('admPkgBtnText').value = pkg.btnText || "Pilih Paket Ini";
+      toggleRibbonInput(pkg.isFeatured ? "true" : "false");
+
+      const panel = document.getElementById('admPkgEditorPanel');
+      if (panel) {
+        panel.style.display = "block";
+        panel.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function closePackageEditForm() {
+      const panel = document.getElementById('admPkgEditorPanel');
+      if (panel) panel.style.display = "none";
+    }
+
+    function savePackageFromForm() {
+      const id = document.getElementById('admPkgId').value;
+      const name = document.getElementById('admPkgName').value.trim();
+      const tierLabel = document.getElementById('admPkgTierLabel').value.trim();
+      const priceDisplay = document.getElementById('admPkgPriceDisplay').value.trim();
+      const orderPrice = parseInt(document.getElementById('admPkgOrderPrice').value, 10) || 0;
+      const description = document.getElementById('admPkgDesc').value.trim();
+      const featuresRaw = document.getElementById('admPkgFeatures').value;
+      const features = featuresRaw.split('\n').map(s => s.trim()).filter(Boolean);
+      const isFeatured = document.getElementById('admPkgFeatured').value === "true";
+      const ribbonText = document.getElementById('admPkgRibbon').value.trim();
+      const btnText = document.getElementById('admPkgBtnText').value.trim();
+
+      if (!name) {
+        alert("Nama paket tidak boleh kosong!");
+        return;
+      }
+
+      if (!storeConfig.packages) storeConfig.packages = [];
+      const existingIdx = storeConfig.packages.findIndex(p => p.id === id);
+
+      const pkgData = {
+        id,
+        tierLabel: tierLabel || "Paket Kemasan",
+        name,
+        priceDisplay: priceDisplay || `Rp ${orderPrice.toLocaleString('id-ID')}`,
+        orderPrice,
+        description,
+        features,
+        isFeatured,
+        ribbonText: isFeatured ? (ribbonText || "Paling Banyak Dipilih") : "",
+        btnText: btnText || "Pilih Paket Ini"
+      };
+
+      if (existingIdx >= 0) {
+        storeConfig.packages[existingIdx] = pkgData;
+        showToast(`✓ Paket "${name}" berhasil diperbarui!`);
+      } else {
+        storeConfig.packages.push(pkgData);
+        showToast(`➕ Paket "${name}" berhasil ditambahkan!`);
+      }
+
+      closePackageEditForm();
+      saveStoreConfig();
+      renderAdminPackages();
+      renderStorefrontPackages();
+    }
+
+    function deletePackage(pkgId) {
+      const pkg = (storeConfig.packages || []).find(p => p.id === pkgId);
+      if (!pkg) return;
+
+      if (confirm(`Apakah Anda yakin ingin menghapus paket "${pkg.name}" dari website?`)) {
+        storeConfig.packages = storeConfig.packages.filter(p => p.id !== pkgId);
+        saveStoreConfig();
+        showToast(`🗑️ Paket "${pkg.name}" berhasil dihapus.`);
+        renderAdminPackages();
+        renderStorefrontPackages();
+      }
+    }
+
+    function movePackageOrder(idx, direction) {
+      if (!storeConfig.packages) return;
+      const targetIdx = idx + direction;
+      if (targetIdx < 0 || targetIdx >= storeConfig.packages.length) return;
+
+      const temp = storeConfig.packages[idx];
+      storeConfig.packages[idx] = storeConfig.packages[targetIdx];
+      storeConfig.packages[targetIdx] = temp;
+
+      saveStoreConfig();
+      renderAdminPackages();
+      renderStorefrontPackages();
+      showToast("⇄ Posisi paket berhasil diubah!");
+    }
+
+    function renderStorefrontPackages() {
+      const grid = document.getElementById('giftTierGrid');
+      if (!grid) return;
+
+      const pkgs = (storeConfig.packages && storeConfig.packages.length > 0) 
+        ? storeConfig.packages 
+        : DEFAULT_STORE_CONFIG.packages;
+
+      grid.innerHTML = "";
+
+      pkgs.forEach(pkg => {
+        const card = document.createElement('div');
+        card.className = `tier-card ${pkg.isFeatured ? 'featured-tier' : ''}`;
+
+        const featuresHtml = (pkg.features || []).map(f => {
+          return `<li><span class="tier-check">✓</span> ${f}</li>`;
+        }).join('');
+
+        const ribbonHtml = (pkg.isFeatured && pkg.ribbonText)
+          ? `<div class="tier-ribbon">${pkg.ribbonText}</div>`
+          : '';
+
+        const badgeClass = pkg.isFeatured ? 'badge-gold' : 'badge-cream';
+        const btnClass = pkg.isFeatured ? 'btn btn-primary' : 'btn btn-outline';
+
+        card.innerHTML = `
+          ${ribbonHtml}
+          <div>
+            <span class="badge-pill ${badgeClass}">${pkg.tierLabel || 'Paket Gift Box'}</span>
+            <h3 class="tier-title">${pkg.name}</h3>
+            <div class="tier-price">${pkg.priceDisplay}</div>
+            <p class="tier-desc">${pkg.description || ''}</p>
+            <ul class="tier-features-list">
+              ${featuresHtml}
+            </ul>
+          </div>
+          <button class="${btnClass}" onclick="selectTierOrder('${pkg.name.replace(/'/g, "\\'")}', ${pkg.orderPrice || 0})">
+            ${pkg.btnText || 'Pilih Paket Ini'}
+          </button>
+        `;
+
+        grid.appendChild(card);
       });
     }
 
@@ -4044,6 +4780,7 @@
               populateProductPicker();
               loadProductToAdminForm(currentlyEditingProductId);
               loadHeroAndSettingsToAdminForm();
+              renderAdminPackages();
               showToast("📤 Data toko berhasil dipulihkan dari file JSON!");
             } else {
               alert("Format file cadangan tidak valid.");
@@ -4065,6 +4802,7 @@
         populateProductPicker();
         loadProductToAdminForm(currentlyEditingProductId);
         loadHeroAndSettingsToAdminForm();
+        renderAdminPackages();
         showToast("⚠️ Pengaturan toko telah direset ke default pabrik.");
       }
     }
